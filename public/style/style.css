@@ -1,0 +1,30 @@
+footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    border-top: 1px solid #e7e7e7;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+footer .text-center {
+    color: #333;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Responsive styles based on device*/
+@media (max-width: 768px) {
+    footer {
+        padding: 15px 0;
+    }
+    
+    footer .text-center {
+        font-size: 12px;
+    }
+}
