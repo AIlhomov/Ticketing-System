@@ -1,5 +1,7 @@
 use ticket;
 
+DROP TABLE IF EXISTS tickets;
+
 CREATE TABLE tickets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -8,3 +10,5 @@ CREATE TABLE tickets (
     status VARCHAR(50) DEFAULT 'open',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+SHOW WARNINGS;

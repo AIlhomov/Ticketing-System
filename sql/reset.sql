@@ -5,3 +5,4 @@
 source setup.sql;
 use ticket;
 source ddl.sql;
+source insert.sql;
