@@ -5,14 +5,10 @@
 
 "use strict";
 
-module.exports = {
-    testConnection: testConnection
-};
-
 const mysql = require('mysql2');
 require('dotenv').config();
 
-// Database connection
+// Database connection configuration
 const dbConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -23,13 +19,43 @@ const dbConfig = {
 
 const connection = mysql.createConnection(dbConfig);
 
-async function testConnection() {
-    connection.connect((err) => {
-        if (err) {
-            console.error('Error connecting to database: ', err);
-            return;
-        }
+connection.connect((err) => {
+    if (err) {
+        console.error('Error connecting to database: ', err);
+    } else {
         console.log('Connected to the database');
+    }
+});
+
+// Function to create a new ticket in the database
+async function createTicket(title, description, department) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO tickets (title, description, department, status) VALUES (?, ?, ?, ?)';
+        connection.query(query, [title, description, department, 'open'], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
     });
 }
 
+// Function to get all tickets from the database
+async function getTickets() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM tickets';
+        connection.query(query, (err, tickets) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(tickets);
+            }
+        });
+    });
+}
+
+module.exports = {
+    createTicket,
+    getTickets
+};

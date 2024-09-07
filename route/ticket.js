@@ -25,7 +25,7 @@
 "use strict";
 const express = require('express');
 const router = express.Router();
-const ticket = require('../src/ticket.js');
+const ticketService = require('../src/ticket.js');
 
 router.get('/', (req, res) => {
     res.redirect('ticket/index'); // Redirect to the ticket index page
@@ -39,4 +39,36 @@ router.get('/ticket/index', (req, res) => {
     res.render('ticket/pages/index', data); // Render the ticket index page
 });
 
+// Render the "Create New Ticket" form
+router.get('/ticket/new', (req, res) => {
+    let data = {
+        title: 'New Ticket',
+        message: 'Create a new ticket'
+    };
+    res.render('ticket/pages/new_ticket', data);  // Render the new ticket page
+});
+
+// Handle form submission and create a new ticket
+router.post('/ticket/new', async (req, res) => {
+    const { title, description, department } = req.body;
+
+    try {
+        await ticketService.createTicket(title, description, department);  // Call the function from src/ticket.js
+        res.redirect('/ticket/list');  // Redirect to the list of tickets
+    } catch (error) {
+        console.error('Error creating ticket:', error);
+        res.status(500).send('Error creating ticket');
+    }
+});
+
+// Route to display the list of tickets
+router.get('/ticket/list', async (req, res) => {
+    try {
+        const tickets = await ticketService.getTickets();  // Call the function to retrieve tickets
+        res.render('ticket/pages/list_tickets', { title: 'List of Tickets', tickets });
+    } catch (error) {
+        console.error('Error retrieving tickets:', error);
+        res.status(500).send('Error retrieving tickets');
+    }
+});
 module.exports = router;
