@@ -1,15 +1,15 @@
 <%- include('../partials/header', { title: 'List of tickets' }); %>
-
 <div class="page-container">
     <h1>List of Tickets</h1>
+
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Title</th>
+                <th><a href="?sort=id&order=<%= sort === 'id' && order === 'asc' ? 'desc' : 'asc' %>">ID</a></th>
+                <th><a href="?sort=title&order=<%= sort === 'title' && order === 'asc' ? 'desc' : 'asc' %>">Title</a></th>
                 <th>Description</th>
-                <th>Department</th>
-                <th>Status</th>
+                <th><a href="?sort=department&order=<%= sort === 'department' && order === 'asc' ? 'desc' : 'asc' %>">Department</a></th>
+                <th><a href="?sort=status&order=<%= sort === 'status' && order === 'asc' ? 'desc' : 'asc' %>">Status</a></th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,4 +31,5 @@
     </table>
 </div>
 
-<%- include('../partials/footer') %>
+<%- include('../partials/footer'); %>
+

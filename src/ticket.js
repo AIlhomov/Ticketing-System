@@ -55,7 +55,26 @@ async function getTickets() {
     });
 }
 
+async function getSortedTickets(sort, order) {
+    return new Promise((resolve, reject) => {
+        // Ensure that the column to sort by is valid and safe
+        const validColumns = ['id', 'title', 'department', 'status'];
+        const sortBy = validColumns.includes(sort) ? sort : 'id';
+
+        const query = `SELECT * FROM tickets ORDER BY ${sortBy} ${order.toUpperCase()}`; // SQL query to fetch sorted tickets
+        connection.query(query, (err, tickets) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(tickets); // Return the sorted tickets
+            }
+        });
+    });
+}
+
+
 module.exports = {
     createTicket,
-    getTickets
+    getTickets,
+    getSortedTickets
 };

@@ -61,11 +61,27 @@ router.post('/ticket/new', async (req, res) => {
     }
 });
 
+
+
+
+
 // Route to display the list of tickets
 router.get('/ticket/list', async (req, res) => {
+    // Get sorting parameters from the query string, default to ID and ascending order
+    const sort = req.query.sort || 'id';
+    const order = req.query.order === 'desc' ? 'desc' : 'asc';
+
     try {
-        const tickets = await ticketService.getTickets();  // Call the function to retrieve tickets
-        res.render('ticket/pages/list_tickets', { title: 'List of Tickets', tickets });
+        // Fetch sorted tickets from the database
+        const tickets = await ticketService.getSortedTickets(sort, order);
+        
+        // Render the view with tickets and sorting details
+        res.render('ticket/pages/list_tickets', { 
+            title: 'List of Tickets', 
+            tickets, 
+            sort, 
+            order 
+        });
     } catch (error) {
         console.error('Error retrieving tickets:', error);
         res.status(500).send('Error retrieving tickets');
