@@ -5,8 +5,6 @@
  * @apiVersion  1.0.0
  */
 
-
-
 /**
  * @api {post} /ticket/ Create a new ticket
  * @apiName PostTicket
@@ -28,3 +26,17 @@
 const express = require('express');
 const router = express.Router();
 const ticket = require('../src/ticket.js');
+
+router.get('/', (req, res) => {
+    res.redirect('ticket/index'); // Redirect to the ticket index page
+});
+
+router.get('/ticket/index', (req, res) => {
+    let data = {
+        title: 'Ticket',
+        message: 'Welcome to the ticket page!'
+    };
+    res.render('ticket/pages/index', data); // Render the ticket index page
+});
+
+module.exports = router;

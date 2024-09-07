@@ -4,39 +4,51 @@
 */
 
 "use strict";
+
+const port = 1337;
+
 const path = require('path');
 const express = require('express');
 const app = express();
-const port = 1337;
+const middleware = require('./middleware/index.js');
+const routeTicket = require('./route/ticket.js');
 
-const mysql = require('mysql2');
-require('dotenv').config();
+app.use(express.urlencoded({ extended: true }));
 
-// Database connection
-const dbConfig = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    multipleStatements: true
-};
-
-const connection = mysql.createConnection(dbConfig);
-
-connection.connect((err) => {
-    if (err) {
-        console.error('Error connecting to database: ', err);
-        return;
-    }
-    console.log('Connected to the database');
-});
+app.set("view engine", "ejs");
+app.use(middleware.logIncomingToConsole);
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/", routeTicket);
+app.listen(port, logStartUpDetailsToConsole);
 
 
 
-app.get('/', (req, res) => {
-  res.send('Hello from Express!');
-});
+/**
+ * Log app details to console when starting up.
+ * @return {void}
+ */
+function logStartUpDetailsToConsole() {
+    let routes = [];
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+    // Find what routes are supported
+    app._router.stack.forEach((middleware) => {
+        if (middleware.route) {
+            // Routes registered directly on the app
+            routes.push(middleware.route);
+        } else if (middleware.name === "router") {
+            // Routes added as router middleware
+            middleware.handle.stack.forEach((handler) => {
+                let route;
+
+                route = handler.route;
+                route && routes.push(route);
+            });
+        }
+    });
+
+    console.info(`Server is listening on port ${port}.`);
+    console.info("Available routes are:");
+    console.info(routes);
+}
+
+app.use("/ticket", routeTicket);
