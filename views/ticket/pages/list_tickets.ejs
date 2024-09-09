@@ -20,11 +20,22 @@
                     <td><%= ticket.title %></td>
                     <td><%= ticket.description %></td>
                     <td><%= ticket.department %></td>
-                    <td><%= ticket.status %></td>
+                    <td>
+                        <form action="/ticket/update-status/<%= ticket.id %>" method="POST">
+                            <select name="status" class="form-control" onchange="this.form.submit()">
+                                <option value="open" <%= ticket.status === 'open' ? 'selected' : '' %>>Open</option>
+                                <option value="in progress" <%= ticket.status === 'in progress' ? 'selected' : '' %>>In Progress</option>
+                                <option value="closed" <%= ticket.status === 'closed' ? 'selected' : '' %>>Closed</option>
+                            </select>
+                        </form>
+                    </td>
                     <td>
                         <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info btn-sm">View</a>
-                        <a href="/ticket/close/<%= ticket.id %>" class="btn btn-warning btn-sm">Close</a>
+                        <% if (ticket.status !== 'closed') { %>
+                            <a href="/ticket/close/<%= ticket.id %>" class="btn btn-warning btn-sm">Close</a>
+                        <% } %>
                     </td>
+                    
                 </tr>
             <% }) %>
         </tbody>
@@ -32,4 +43,3 @@
 </div>
 
 <%- include('../partials/footer'); %>
-

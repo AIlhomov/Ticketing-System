@@ -28,7 +28,7 @@ const router = express.Router();
 const ticketService = require('../src/ticket.js');
 
 router.get('/', (req, res) => {
-    res.redirect('ticket/index'); // Redirect to the ticket index page
+    res.redirect('ticket/index');
 });
 
 router.get('/ticket/index', (req, res) => {
@@ -36,28 +36,40 @@ router.get('/ticket/index', (req, res) => {
         title: 'Ticket',
         message: 'Welcome to the ticket page!'
     };
-    res.render('ticket/pages/index', data); // Render the ticket index page
+    res.render('ticket/pages/index', data);
 });
 
-// Render the "Create New Ticket" form
 router.get('/ticket/new', (req, res) => {
     let data = {
         title: 'New Ticket',
         message: 'Create a new ticket'
     };
-    res.render('ticket/pages/new_ticket', data);  // Render the new ticket page
+    res.render('ticket/pages/new_ticket', data);
 });
 
-// Handle form submission and create a new ticket
+// Create a new ticket
 router.post('/ticket/new', async (req, res) => {
     const { title, description, department } = req.body;
 
     try {
-        await ticketService.createTicket(title, description, department);  // Call the function from src/ticket.js
-        res.redirect('/ticket/list');  // Redirect to the list of tickets
+        await ticketService.createTicket(title, description, department);
+        res.redirect('/ticket/list');
     } catch (error) {
         console.error('Error creating ticket:', error);
         res.status(500).send('Error creating ticket');
+    }
+});
+
+router.post('/ticket/update-status/:id', async (req, res) => {
+    const ticketId = req.params.id;
+    const newStatus = req.body.status;
+
+    try {
+        await ticketService.updateTicketStatus(ticketId, newStatus);
+        res.redirect('/ticket/list');
+    } catch (err) {
+        console.error('Error updating ticket status:', err);
+        res.status(500).send('Error updating status');
     }
 });
 
@@ -65,17 +77,14 @@ router.post('/ticket/new', async (req, res) => {
 
 
 
-// Route to display the list of tickets
+// Display a list of tickets
 router.get('/ticket/list', async (req, res) => {
-    // Get sorting parameters from the query string, default to ID and ascending order
     const sort = req.query.sort || 'id';
     const order = req.query.order === 'desc' ? 'desc' : 'asc';
 
     try {
-        // Fetch sorted tickets from the database
         const tickets = await ticketService.getSortedTickets(sort, order);
         
-        // Render the view with tickets and sorting details
         res.render('ticket/pages/list_tickets', { 
             title: 'List of Tickets', 
             tickets, 

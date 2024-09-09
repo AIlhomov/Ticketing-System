@@ -8,7 +8,7 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-// Database connection configuration
+// Database connection
 const dbConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -27,7 +27,7 @@ connection.connect((err) => {
     }
 });
 
-// Function to create a new ticket in the database
+// Creating new ticket
 async function createTicket(title, description, department) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO tickets (title, description, department, status) VALUES (?, ?, ?, ?)';
@@ -41,7 +41,7 @@ async function createTicket(title, description, department) {
     });
 }
 
-// Function to get all tickets from the database
+// Get all tickets from the database
 async function getTickets() {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM tickets';
@@ -57,11 +57,10 @@ async function getTickets() {
 
 async function getSortedTickets(sort, order) {
     return new Promise((resolve, reject) => {
-        // Ensure that the column to sort by is valid and safe
         const validColumns = ['id', 'title', 'department', 'status'];
         const sortBy = validColumns.includes(sort) ? sort : 'id';
 
-        const query = `SELECT * FROM tickets ORDER BY ${sortBy} ${order.toUpperCase()}`; // SQL query to fetch sorted tickets
+        const query = `SELECT * FROM tickets ORDER BY ${sortBy} ${order.toUpperCase()}`;
         connection.query(query, (err, tickets) => {
             if (err) {
                 reject(err);
@@ -73,8 +72,24 @@ async function getSortedTickets(sort, order) {
 }
 
 
+
+// Ticket status
+async function updateTicketStatus(id, status) {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE tickets SET status = ? WHERE id = ?';
+        connection.query(query, [status, id], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
 module.exports = {
     createTicket,
     getTickets,
-    getSortedTickets
+    getSortedTickets,
+    updateTicketStatus
 };
