@@ -194,3 +194,10 @@ a.btn-primary:hover {
     color: #00d1b2;
     font-weight: bold;
 }
+
+
+/* Spacing between action buttons */
+.action-btn {
+    margin-bottom: 10px;
+    display: block;
+}

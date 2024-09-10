@@ -90,6 +90,20 @@ router.get('/ticket/view/:id', async (req, res) => {
     }
 });
 
+// Close a single ticket
+router.get('/ticket/close/:id', async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+        await ticketService.updateTicketStatus(ticketId, 'closed');
+        res.redirect('/ticket/list');
+    } catch (err) {
+        console.error('Error closing ticket:', err);
+        res.status(500).send('Error closing ticket');
+    }
+});
+
+
 
 
 

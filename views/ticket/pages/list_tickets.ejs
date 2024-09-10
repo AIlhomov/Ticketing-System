@@ -29,11 +29,12 @@
                         </form>
                     </td>
                     <td>
-                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info btn-sm">View</a>
+                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info btn-sm action-btn">View</a>
                         <% if (ticket.status !== 'closed') { %>
-                            <a href="/ticket/close/<%= ticket.id %>" class="btn btn-warning btn-sm">Close</a>
+                            <a href="/ticket/close/<%= ticket.id %>" class="btn btn-warning btn-sm action-btn">Close</a>
                         <% } %>
                     </td>
+                    
                     
                 </tr>
             <% }) %>
