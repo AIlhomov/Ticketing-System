@@ -87,9 +87,27 @@ async function updateTicketStatus(id, status) {
     });
 }
 
+// Fetch a single ticket by ID
+async function getTicketById(id) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM tickets WHERE id = ?';
+        connection.query(query, [id], (err, result) => {
+            if (err) {
+                reject(err);
+            } else if (result.length === 0) {
+                resolve(null);
+            } else {
+                resolve(result[0]);
+            }
+        });
+    });
+}
+
+
 module.exports = {
     createTicket,
     getTickets,
     getSortedTickets,
-    updateTicketStatus
+    updateTicketStatus,
+    getTicketById
 };

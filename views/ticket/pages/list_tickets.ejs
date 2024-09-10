@@ -24,7 +24,6 @@
                         <form action="/ticket/update-status/<%= ticket.id %>" method="POST">
                             <select name="status" class="form-control" onchange="this.form.submit()">
                                 <option value="open" <%= ticket.status === 'open' ? 'selected' : '' %>>Open</option>
-                                <option value="in progress" <%= ticket.status === 'in progress' ? 'selected' : '' %>>In Progress</option>
                                 <option value="closed" <%= ticket.status === 'closed' ? 'selected' : '' %>>Closed</option>
                             </select>
                         </form>

@@ -73,6 +73,23 @@ router.post('/ticket/update-status/:id', async (req, res) => {
     }
 });
 
+// View a single tickets details
+router.get('/ticket/view/:id', async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+        const ticket = await ticketService.getTicketById(ticketId);
+        if (!ticket) {
+            res.status(404).send('Ticket not found');
+            return;
+        }
+        res.render('ticket/pages/view_ticket', { ticket });
+    } catch (err) {
+        console.error('Error fetching ticket:', err);
+        res.status(500).send('Error fetching ticket');
+    }
+});
+
 
 
 

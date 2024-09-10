@@ -1,0 +1,14 @@
+<%- include('../partials/header', { title: 'View Ticket' }); %>
+
+<div class="page-container">
+    <h1>Ticket Details</h1>
+    <p><strong>ID:</strong> <%= ticket.id %></p>
+    <p><strong>Title:</strong> <%= ticket.title %></p>
+    <p><strong>Description:</strong> <%= ticket.description %></p>
+    <p><strong>Department:</strong> <%= ticket.department %></p>
+    <p><strong>Status:</strong> <%= ticket.status %></p>
+
+    <a href="/ticket/list" class="btn btn-secondary">Back to List</a>
+</div>
+
+<%- include('../partials/footer'); %>
