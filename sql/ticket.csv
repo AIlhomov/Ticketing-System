@@ -1,21 +1,21 @@
 ID,Title,Description,Department,Status
-1,Ticket 1,This is the description for ticket 1. Issue related to Technical Support.,Software Development,in progress
-2,Ticket 2,This is the description for ticket 2. Issue related to Security.,Technical Support,in progress
-3,Ticket 3,This is the description for ticket 3. Issue related to Hardware.,Software Development,closed
-4,Ticket 4,This is the description for ticket 4. Issue related to Hardware.,Software Development,in progress
-5,Ticket 5,This is the description for ticket 5. Issue related to Software Development.,Security,in progress
-6,Ticket 6,This is the description for ticket 6. Issue related to Technical Support.,Security,open
-7,Ticket 7,This is the description for ticket 7. Issue related to Security.,Technical Support,in progress
-8,Ticket 8,This is the description for ticket 8. Issue related to Security.,Software Development,in progress
-9,Ticket 9,This is the description for ticket 9. Issue related to Networking.,Networking,in progress
-10,Ticket 10,This is the description for ticket 10. Issue related to Security.,Hardware,open
-11,Ticket 11,This is the description for ticket 11. Issue related to Hardware.,Software Development,in progress
-12,Ticket 12,This is the description for ticket 12. Issue related to Security.,Hardware,in progress
-13,Ticket 13,This is the description for ticket 13. Issue related to Security.,Software Development,in progress
-14,Ticket 14,This is the description for ticket 14. Issue related to Security.,Security,open
-15,Ticket 15,This is the description for ticket 15. Issue related to Software Development.,Technical Support,in progress
-16,Ticket 16,This is the description for ticket 16. Issue related to Networking.,Technical Support,open
-17,Ticket 17,This is the description for ticket 17. Issue related to Technical Support.,Software Development,closed
-18,Ticket 18,This is the description for ticket 18. Issue related to Networking.,Networking,in progress
-19,Ticket 19,This is the description for ticket 19. Issue related to Technical Support.,Software Development,in progress
-20,Ticket 20,This is the description for ticket 20. Issue related to Security.,Security,in progress
+1,Ticket 1,Can't connect to the internet,Hardware,open
+2,Ticket 2,Need help with password reset,Hardware,open
+3,Ticket 3,Need help with email setup,Technical Support,open
+4,Ticket 4,Need help with security setup,Software Development,closed
+5,Ticket 5,Need help with password reset,Security,open
+6,Ticket 6,Can't connect to the internet,Technical Support,open
+7,Ticket 7,Need help with password reset,Technical Support,closed
+8,Ticket 8,Can't connect to the internet,Technical Support,open
+9,Ticket 9,Need help with network setup,Networking,open
+10,Ticket 10,Can't connect to the internet,Technical Support,closed
+11,Ticket 11,Need help with email setup,Security,closed
+12,Ticket 12,Need help with software installation,Security,open
+13,Ticket 13,Need help with software installation,Security,closed
+14,Ticket 14,Need help with email setup,Hardware,closed
+15,Ticket 15,Need help with password reset,Networking,closed
+16,Ticket 16,Need help with security setup,Software Development,closed
+17,Ticket 17,Need help with printer setup,Hardware,open
+18,Ticket 18,Can't connect to the internet,Security,open
+19,Ticket 19,Need help with email setup,Software Development,open
+20,Ticket 20,Need help with network setup,Software Development,open
