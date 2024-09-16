@@ -132,5 +132,7 @@ dist
 #extra
 node_modules/
 
-#db
-.env
+
+#PC
+insertPC.sql
+resetPC.sql

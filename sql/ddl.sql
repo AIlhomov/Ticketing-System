@@ -1,5 +1,6 @@
 use ticket;
 
+DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS tickets;
 
 CREATE TABLE tickets (
@@ -9,6 +10,17 @@ CREATE TABLE tickets (
     department VARCHAR(100),
     status VARCHAR(50) DEFAULT 'open',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE attachments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    size INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
 );
 
 SHOW WARNINGS;

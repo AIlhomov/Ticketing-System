@@ -47,8 +47,10 @@ function logStartUpDetailsToConsole() {
     });
 
     console.info(`Server is listening on port ${port}.`);
+    console.info('Server is on http://localhost:1337/');
     console.info("Available routes are:");
     console.info(routes);
 }
 
 app.use("/ticket", routeTicket);
+app.use('/uploads', express.static('uploads'));

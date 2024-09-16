@@ -1,31 +1,24 @@
 <%- include('../partials/header', { title: 'Create New Ticket' }); %>
-
-<div class="custom-wrapper">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Create a New Ticket</h1>
-                <form action="/ticket/new" method="POST">
-                    <div class="form-group">
-                        <label for="title">Ticket Title</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Ticket Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="department">Department (Optional)</label>
-                        <input type="text" class="form-control" id="department" name="department">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Submit Ticket</button>
-                </form>
-            </div>
+<div class="container">
+    <h1>Create a New Ticket</h1>
+    <form action="/ticket/new" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" class="form-control" required>
         </div>
-    </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" class="form-control" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="department">Department:</label>
+            <input type="text" name="department" id="department" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="file">Attach an Image/Document (Allowed formats: JPG, PNG, GIF, PDF. Max size: 1MB per file, 5MB total):</label>
+            <input type="file" name="file" id="file" class="form-control" multiple>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Ticket</button>
+    </form>
 </div>
-
 <%- include('../partials/footer'); %>

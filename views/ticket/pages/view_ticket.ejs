@@ -1,14 +1,27 @@
 <%- include('../partials/header', { title: 'View Ticket' }); %>
-
-<div class="page-container">
+<div class="container">
     <h1>Ticket Details</h1>
-    <p><strong>ID:</strong> <%= ticket.id %></p>
+
     <p><strong>Title:</strong> <%= ticket.title %></p>
     <p><strong>Description:</strong> <%= ticket.description %></p>
     <p><strong>Department:</strong> <%= ticket.department %></p>
     <p><strong>Status:</strong> <%= ticket.status %></p>
 
-    <a href="/ticket/list" class="btn btn-secondary">Back to List</a>
+    <% if (attachment) { %>
+        <div class="attachment">
+            <p><strong>Attached File:</strong></p>
+            <% if (attachment.mime_type.startsWith('image')) { %>
+                <img src="/uploads/<%= attachment.file_name %>" alt="Attached Image" class="img-fluid" style="max-width: 400px; max-height: 300px;">
+            <% } else { %>
+                <a href="/uploads/<%= attachment.file_name %>" download>Download Attachment</a>
+            <% } %>
+        </div>
+    <% } else { %>
+        <p>No attachment available for this ticket.</p>
+    <% } %>
+    
+
+    <a href="/ticket/list" class="btn btn-secondary mt-4">Back to List</a>
 </div>
 
 <%- include('../partials/footer'); %>

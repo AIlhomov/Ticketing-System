@@ -2,6 +2,7 @@
 -- Insert some data into the database. Using CSV files to insert data.
 --
 
+DELETE FROM attachments; -- Clear the attachments table.
 DELETE FROM tickets;
 
 --
