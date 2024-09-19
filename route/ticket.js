@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const ticketService = require('../src/ticket.js');
 const multer = require('multer');
+const userService = require('../src/userController.js');
+const passport = require('passport');
 
 router.get('/', (req, res) => {
     res.redirect('ticket/index');
@@ -11,7 +13,8 @@ router.get('/', (req, res) => {
 router.get('/ticket/index', (req, res) => {
     let data = {
         title: 'Ticket',
-        message: 'Welcome to the ticket page!'
+        message: 'Welcome to the ticket page!',
+        user: req.user || null
     };
     res.render('ticket/pages/index', data);
 });
@@ -128,7 +131,54 @@ router.get('/ticket/list', async (req, res) => {
     }
 });
 
+// -----------------------------------------------
+// Registration route
+router.post('/register', async (req, res) => {
+    const { username, password, email } = req.body;
 
+    try {
+        await userService.createUser(username, password, email);
+        res.redirect('/login');
+    } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).send('Error creating user');
+    }
+});
+
+// Render the login page
+router.get('/login', (req, res) => {
+    res.render('ticket/pages/login', { title: 'Login' });
+});
+
+// Handle login form submission using a local strategy
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) return next(err);
+        if (!user) {
+            // Show error message if login failed
+            return res.render('ticket/pages/login', { message: info.message });
+        }
+        req.logIn(user, (err) => {
+            if (err) return next(err);
+            // Redirect to dashboard or home on success
+            return res.redirect('/dashboard');
+        });
+    })(req, res, next);
+});
+
+// Google OAuth login route
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Google OAuth callback route
+router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+    res.redirect('/dashboard');
+});
+
+// Log out route
+router.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/login');
+});
 
 
 module.exports = router;

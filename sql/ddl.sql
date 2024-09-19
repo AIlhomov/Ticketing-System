@@ -1,5 +1,6 @@
 use ticket;
 
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS tickets;
 
@@ -22,5 +23,15 @@ CREATE TABLE attachments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
 );
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) UNIQUE,  -- Username for regular login
+    password VARCHAR(255),         -- Hashed password for regular login
+    google_id VARCHAR(255),        -- Google ID for Google login
+    email VARCHAR(255) UNIQUE,     -- User email (from Google or registration)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 SHOW WARNINGS;
