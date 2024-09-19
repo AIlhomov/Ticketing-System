@@ -5,6 +5,8 @@ const ticketService = require('../src/ticket.js');
 const multer = require('multer');
 const userService = require('../src/userController.js');
 const passport = require('passport');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 router.get('/', (req, res) => {
     res.redirect('ticket/index');
@@ -179,6 +181,35 @@ router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
 });
+// --------------------------------------------------------------------------
+// Show register page
+router.get('/register', (req, res) => {
+    res.render('ticket/pages/register', { title: 'Register' });
+});
 
+// Handle registration
+router.post('/register', async (req, res) => {
+    const { username, email, password } = req.body;
+
+    // Hash the password
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Server error');
+        }
+
+        // Insert the user into the database
+        const query = 'INSERT INTO users (username, password, email) VALUES (?, ?, ?)';
+        connection.query(query, [username, hash, email], (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Database error');
+            }
+
+            // Redirect to the login page after successful registration
+            res.redirect('/login');
+        });
+    });
+});
 
 module.exports = router;
