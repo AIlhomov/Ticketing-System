@@ -7,6 +7,7 @@ const userService = require('../src/userController.js');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const { isAdmin, isUser } = require('../middleware/role');
 
 router.get('/', (req, res) => {
     res.redirect('ticket/index');
@@ -24,7 +25,8 @@ router.get('/ticket/index', (req, res) => {
 router.get('/ticket/new', (req, res) => {
     let data = {
         title: 'New Ticket',
-        message: 'Create a new ticket'
+        message: 'Create a new ticket',
+        user: req.user || null
     };
     res.render('ticket/pages/new_ticket', data);
 });
@@ -44,9 +46,21 @@ router.post('/ticket/new', (req, res) => {
             console.log('Uploaded Files:', req.files);
             console.log('Form Data:', req.body); 
 
+            const { title, description, department, email } = req.body;
+
+            // Check if the user is logged in or not
+            let userEmail;
+            if (req.user) {
+                userEmail = req.user.email; // Use the email of the logged-in user
+            } else {
+                userEmail = email; // Use the provided email for anonymous users
+                if (!userEmail) {
+                    return res.status(400).send('Error: Email is required for anonymous ticket submissions.');
+                }
+            }
+
             // Create the ticket in the database
-            const { title, description, department } = req.body;
-            const ticket = await ticketService.createTicket(title, description, department);
+            const ticket = await ticketService.createTicket(title, description, department, userEmail);
 
             // If files were uploaded, save the attachments to the database
             if (req.files && req.files.length > 0) {
@@ -114,7 +128,7 @@ router.get('/ticket/close/:id', async (req, res) => {
 });
 
 // Display a list of tickets
-router.get('/ticket/list', async (req, res) => {
+router.get('/ticket/list', isAdmin, async (req, res) => {
     const sort = req.query.sort || 'id';
     const order = req.query.order === 'desc' ? 'desc' : 'asc';
 
@@ -156,17 +170,29 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) return next(err);
+
         if (!user) {
             // Show error message if login failed
-            return res.render('ticket/pages/login', { message: info.message });
+            return res.render('ticket/pages/login', { 
+                message: info ? info.message : 'Login failed. Please try again.' 
+            });
         }
+
         req.logIn(user, (err) => {
             if (err) return next(err);
-            // Redirect to dashboard or home on success
-            return res.redirect('/dashboard');
+
+            // Redirect to dashboard based on user role
+            if (user.role === 'admin') {
+                return res.redirect('/dashboard');
+            } else if (user.role === 'user') {
+                return res.redirect('/dashboard'); // Adjust according to your flow
+            } else {
+                return res.redirect('/'); // Default to home page
+            }
         });
     })(req, res, next);
 });
+
 
 // Google OAuth login route
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -177,9 +203,11 @@ router.get('/auth/google/callback', passport.authenticate('google', { failureRed
 });
 
 // Log out route
-router.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/login');
+router.get('/logout', (req, res, next) => {
+    req.logout(function (err) {
+        if (err) { return next(err); }
+        res.redirect('/login'); // Redirect to login or another page after logging out
+    });
 });
 // --------------------------------------------------------------------------
 // Show register page
@@ -211,5 +239,26 @@ router.post('/register', async (req, res) => {
         });
     });
 });
+
+// Dashboard route
+router.get('/dashboard', (req, res) => {
+    // Check if the user is logged in
+    if (!req.user) {
+        return res.redirect('/login');
+    }
+
+    // If the user is an admin, show all tickets
+    if (req.user.role === 'admin') {
+        return res.redirect('/ticket/list'); // Admins can see all tickets
+    }
+
+    // If the user is a regular user, show the create ticket form
+    if (req.user.role === 'user') {
+        return res.render('ticket/pages/user_dashboard', { user: req.user, title: 'User Dashboard' });  // Regular users can submit tickets
+    }
+    console.log(req.user);  // This should output the logged-in user object
+
+});
+
 
 module.exports = router;

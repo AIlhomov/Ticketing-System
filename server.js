@@ -22,9 +22,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(flash());
 
 app.use(session({
-    secret: 'keyboardCat',  // You should use a secure secret in production
-    resave: false,// Prevents session being saved back to the session store if it wasn't modified
-    saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store
+    secret: 'keyboardCat',
+    resave: false, // Prevents session being saved back to the session store if it wasn't modified
+    saveUninitialized: false, // Forces a session that is "uninitialized" to be saved to the store
+    store: new session.MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }), // Stores session data in memory
+    cookie: { secure: false } // Secure should be true in production to force HTTPS
 }));
 app.use((req, res, next) => {
     res.locals.user = req.user || null; // `req.user` is populated by passport if user is logged in

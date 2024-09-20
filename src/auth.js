@@ -13,8 +13,8 @@ passport.use(new LocalStrategy((username, password, done) => {
         if (results.length === 0) return done(null, false, { message: 'Incorrect username.' });
 
         const user = results[0];
-        
-        // Validate password using bcrypt
+
+        // Compare entered password with the stored hashed password
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) return done(err);
             if (isMatch) {
@@ -25,6 +25,7 @@ passport.use(new LocalStrategy((username, password, done) => {
         });
     });
 }));
+
 
 // Google OAuth strategy
 passport.use(new GoogleStrategy({
@@ -41,11 +42,11 @@ passport.use(new GoogleStrategy({
 
         if (results.length === 0) {
             // Insert new user into the database
-            const insertQuery = 'INSERT INTO users (google_id, email) VALUES (?, ?)';
-            connection.query(insertQuery, [googleId, email], (err, result) => {
+            const insertQuery = 'INSERT INTO users (google_id, email, role) VALUES (?, ?, ?)';
+            connection.query(insertQuery, [googleId, email, 'user'], (err, result) => {
                 if (err) return done(err);
 
-                const newUser = { id: result.insertId, google_id: googleId, email: email };
+                const newUser = { id: result.insertId, google_id: googleId, email: email, role: 'user' };
                 return done(null, newUser);
             });
         } else {
@@ -54,15 +55,16 @@ passport.use(new GoogleStrategy({
     });
 }));
 
-// Serialize and deserialize user
+
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.id);  // Store user ID in the session
 });
 
 passport.deserializeUser((id, done) => {
     const query = 'SELECT * FROM users WHERE id = ?';
     connection.query(query, [id], (err, results) => {
         if (err) return done(err);
-        done(null, results[0]);
+        done(null, results[0]);  // Retrieve full user object from DB
     });
 });
+

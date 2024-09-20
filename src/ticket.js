@@ -9,11 +9,11 @@ const connection = require('./db.js');
 const multer = require('multer');
 const path = require('path');
 
-async function createTicket(title, description, department, file) {
+async function createTicket(title, description, department, email, file) {
     return new Promise((resolve, reject) => {
         
         const query = 'INSERT INTO tickets (title, description, department, status) VALUES (?, ?, ?, ?)';
-        connection.query(query, [title, description, department, 'open'], (err, result) => {
+        connection.query(query, [title, description, department, email, 'open'], (err, result) => {
             if (err) {
                 reject(err);
                 return;

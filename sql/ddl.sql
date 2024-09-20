@@ -10,6 +10,7 @@ CREATE TABLE tickets (
     description TEXT NOT NULL,
     department VARCHAR(100),
     status VARCHAR(50) DEFAULT 'open',
+    email VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -30,7 +31,8 @@ CREATE TABLE users (
     password VARCHAR(255),         -- Hashed password for regular login
     google_id VARCHAR(255),        -- Google ID for Google login
     email VARCHAR(255) UNIQUE,     -- User email (from Google or registration)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    role ENUM('admin', 'user') DEFAULT 'user'
 );
 
 
