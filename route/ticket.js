@@ -139,7 +139,8 @@ router.get('/ticket/list', isAdmin, async (req, res) => {
             title: 'List of Tickets', 
             tickets, 
             sort, 
-            order 
+            order,
+            user: req.user || null 
         });
     } catch (error) {
         console.error('Error retrieving tickets:', error);

@@ -270,10 +270,8 @@ a.btn-primary:hover {
 }
 
 .alert-danger {
-    background-color: #f8d7da;
-    color: #842029;
+    color: #c50717;
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #f5c2c7;
     border-radius: 4px;
 }

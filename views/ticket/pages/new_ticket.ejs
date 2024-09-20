@@ -18,14 +18,14 @@
 
         <% if (!user) { %>
         <div class="form-group">
-            <label for="email">Email (required for anonymous users):</label>
+            <label for="email">Email (required):</label>
             <input type="email" class="form-control" id="email" name="email" required>
         </div>
         <% } %>
 
         <div class="form-group">
-            <label for="attachments">Attach an Image/Document (Allowed formats: JPG, PNG, GIF, PDF. Max size: 1MB per file, 5MB total):</label>
-            <input type="file" class="form-control" id="attachments" name="attachments" multiple>
+            <label for="file">Attach an Image/Document (Allowed formats: JPG, PNG, GIF, PDF. Max size: 1MB per file, 5MB total):</label>
+            <input type="file" id="file" name="file" class="form-control" multiple>
         </div>
 
         <button type="submit" class="btn btn-primary">Submit Ticket</button>
