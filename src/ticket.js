@@ -175,6 +175,28 @@ async function saveAttachment(attachmentData) {
     });
 }
 
+// Function to fetch all tickets (for admin)
+async function getAllTickets() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM tickets';
+        connection.query(query, (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+}
+
+// Function to fetch tickets by user ID (for regular user)
+async function getTicketsByUserId(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM tickets WHERE user_id = ?';
+        connection.query(query, [userId], (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+}
+
 module.exports = {
     createTicket,
     getTickets,
@@ -183,5 +205,7 @@ module.exports = {
     getTicketById,
     uploadFiles,
     getAttachmentByTicketId,
-    saveAttachment
+    saveAttachment,
+    getAllTickets,
+    getTicketsByUserId
 };

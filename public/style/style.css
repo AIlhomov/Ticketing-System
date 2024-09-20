@@ -275,3 +275,11 @@ a.btn-primary:hover {
     margin-bottom: 20px;
     border-radius: 4px;
 }
+
+.tickets-your-view-middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+}

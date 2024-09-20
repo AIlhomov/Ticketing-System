@@ -11,6 +11,7 @@ CREATE TABLE tickets (
     department VARCHAR(100),
     status VARCHAR(50) DEFAULT 'open',
     email VARCHAR(255),
+    user_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

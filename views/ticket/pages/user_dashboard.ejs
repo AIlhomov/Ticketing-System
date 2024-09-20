@@ -1,12 +1,41 @@
 <%- include('../partials/header', { title: 'User Dashboard' }); %>
 
 <div class="container">
-    <% if (user) { %>
-        <h1>Welcome to Your Dashboard, <%= user.username %>!</h1>
-        <p>Here, you can create new tickets for any issues you are facing:</p>
+    <h1>Welcome to Your Dashboard, <%= user.username || user.email %>!</h1>
+    
+    <p>Here, you can create new tickets for any issues you are facing:</p>
+    <a href="/ticket/new" class="btn btn-primary">Create New Ticket</a>
+    
+    <h2 class="tickets-your-view-middle">Your Tickets</h2>
+    <% if (tickets.length === 0) { %>
+        <p>You haven't created any tickets yet.</p>
     <% } else { %>
-        <h1>Welcome to Your Dashboard!</h1>
-        <p>Please log in to see your dashboard.</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% tickets.forEach(ticket => { %>
+                <tr>
+                    <td><%= ticket.id %></td>
+                    <td><%= ticket.title %></td>
+                    <td><%= ticket.description %></td>
+                    <td><%= ticket.department %></td>
+                    <td><%= ticket.status %></td>
+                    <td>
+                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info">View</a>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
     <% } %>
 </div>
 

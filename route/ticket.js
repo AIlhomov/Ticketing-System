@@ -33,6 +33,7 @@ router.get('/ticket/new', (req, res) => {
 
 // Create a new ticket
 router.post('/ticket/new', (req, res) => {
+
     ticketService.uploadFiles(req, res, async (err) => {
         if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
             return res.status(400).send('Error: Each file must be less than 1MB.');
@@ -46,6 +47,7 @@ router.post('/ticket/new', (req, res) => {
             console.log('Uploaded Files:', req.files);
             console.log('Form Data:', req.body); 
 
+            const userId = req.user ? req.user.id : null; // Store user ID if logged in
             const { title, description, department, email } = req.body;
 
             // Check if the user is logged in or not
@@ -60,7 +62,7 @@ router.post('/ticket/new', (req, res) => {
             }
 
             // Create the ticket in the database
-            const ticket = await ticketService.createTicket(title, description, department, userEmail);
+            const ticket = await ticketService.createTicket(title, description, department, userEmail, userId);
 
             // If files were uploaded, save the attachments to the database
             if (req.files && req.files.length > 0) {
@@ -107,7 +109,7 @@ router.get('/ticket/view/:id', async (req, res) => {
         const ticket = await ticketService.getTicketById(ticketId);
         const attachment = await ticketService.getAttachmentByTicketId(ticketId);
 
-        res.render('ticket/pages/view_ticket', { ticket, attachment });
+        res.render('ticket/pages/view_ticket', { ticket, attachment, user: req.user || null });
     } catch (err) {
         console.error('Error fetching ticket:', err);
         res.status(500).send('Error fetching ticket details.');
@@ -242,25 +244,38 @@ router.post('/register', async (req, res) => {
 });
 
 // Dashboard route
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
     // Check if the user is logged in
     if (!req.user) {
         return res.redirect('/login');
     }
 
-    // If the user is an admin, show all tickets
-    if (req.user.role === 'admin') {
-        return res.redirect('/ticket/list'); // Admins can see all tickets
-    }
+    try {
+        // If the user is an admin, show all tickets
+        if (req.user.role === 'admin') {
+            const tickets = await ticketService.getAllTickets(); // Fetch all tickets for admin
+            return res.render('ticket/pages/admin_dashboard', { 
+                user: req.user, 
+                title: 'Admin Dashboard', 
+                tickets 
+            });
+        }
 
-    // If the user is a regular user, show the create ticket form
-    if (req.user.role === 'user') {
-        return res.render('ticket/pages/user_dashboard', { user: req.user, title: 'User Dashboard' });  // Regular users can submit tickets
-    }
-    console.log(req.user);  // This should output the logged-in user object
+        // If the user is a regular user, show their submitted tickets
+        if (req.user.role === 'user') {
+            const userTickets = await ticketService.getTicketsByUserId(req.user.id); // Fetch user's tickets
+            return res.render('ticket/pages/user_dashboard', { 
+                user: req.user, 
+                title: 'User Dashboard', 
+                tickets: userTickets 
+            });
+        }
 
+    } catch (error) {
+        console.error('Error retrieving tickets:', error);
+        return res.status(500).send('Error retrieving tickets');
+    }
 });
-
 
 //Success route
 router.get('/ticket/success', (req, res) => {
