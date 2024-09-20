@@ -7,21 +7,32 @@
     <p><strong>Department:</strong> <%= ticket.department %></p>
     <p><strong>Status:</strong> <%= ticket.status %></p>
 
-    <% if (attachment) { %>
-        <div class="attachment">
-            <p><strong>Attached File:</strong></p>
-            <% if (attachment.mime_type.startsWith('image')) { %>
-                <img src="/uploads/<%= attachment.file_name %>" alt="Attached Image" class="img-fluid" style="max-width: 400px; max-height: 300px;">
-            <% } else { %>
-                <a href="/uploads/<%= attachment.file_name %>" download>Download Attachment</a>
-            <% } %>
+    <% if (attachments && attachments.length > 0) { %>
+        <div class="attachments">
+            <p><strong>Attached Files:</strong></p>
+            <div class="row">
+                <% attachments.forEach(attachment => { %>
+                    <div class="col-md-4 mb-4">
+                        <% if (attachment.mime_type.startsWith('image')) { %>
+                            <img src="/uploads/<%= attachment.file_name %>" alt="Attached Image" class="img-fluid img-thumbnail" style="max-width: 100%; height: auto;">
+                        <% } else { %>
+                            <a href="/uploads/<%= attachment.file_name %>" download>Download Attachment</a>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
         </div>
     <% } else { %>
         <p>No attachment available for this ticket.</p>
     <% } %>
-    
 
-    <a href="/ticket/list" class="btn btn-secondary mt-4">Back to List</a>
+    <!-- Conditionally render the back button based on user role -->
+    <% if (user.role === 'admin') { %>
+        <a href="/ticket/list" class="btn btn-secondary mt-4">Back to List</a>
+    <% } else { %>
+        <a href="/dashboard" class="btn btn-secondary mt-4">Back to Dashboard</a>
+    <% } %>
+
 </div>
 
 <%- include('../partials/footer'); %>

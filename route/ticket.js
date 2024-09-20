@@ -59,8 +59,8 @@ router.post('/ticket/new', (req, res) => {
                 }
             }
 
-            // Create the ticket in the database and pass the files array
-            const ticket = await ticketService.createTicket(title, description, department, userEmail, req.files);
+            // Create the ticket in the database and pass the user_id (if logged in) or email (if anonymous)
+            const ticket = await ticketService.createTicket(title, description, department, userEmail, userId, req.files);
 
             // Redirect to success page or confirmation message
             res.redirect('/ticket/success');
@@ -70,6 +70,7 @@ router.post('/ticket/new', (req, res) => {
         }
     });
 });
+
 
 
 
@@ -90,15 +91,27 @@ router.post('/ticket/update-status/:id', async (req, res) => {
 // View a single tickets details
 router.get('/ticket/view/:id', async (req, res) => {
     const ticketId = req.params.id;
-    
-    try {
-        const ticket = await ticketService.getTicketById(ticketId);
-        const attachment = await ticketService.getAttachmentByTicketId(ticketId);
 
-        res.render('ticket/pages/view_ticket', { ticket, attachment, user: req.user || null });
-    } catch (err) {
-        console.error('Error fetching ticket:', err);
-        res.status(500).send('Error fetching ticket details.');
+    try {
+        // Fetch ticket details
+        const ticket = await ticketService.getTicketById(ticketId);
+
+        // Fetch related attachments
+        const attachments = await ticketService.getAttachmentsByTicketId(ticketId);
+
+        if (!ticket) {
+            return res.status(404).send('Ticket not found');
+        }
+
+        // Render the view_ticket page and pass ticket and attachments data
+        res.render('ticket/pages/view_ticket', {
+            user: req.user,  // Pass the user for role-based rendering
+            ticket: ticket,
+            attachments: attachments  // Pass attachments here
+        });
+    } catch (error) {
+        console.error('Error retrieving ticket details:', error);
+        return res.status(500).send('Error retrieving ticket details');
     }
 });
 
@@ -237,9 +250,11 @@ router.get('/dashboard', async (req, res) => {
     }
 
     try {
-        // If the user is an admin, show all tickets
+        let tickets = [];
+
+        // If the user is an admin, fetch all tickets
         if (req.user.role === 'admin') {
-            const tickets = await ticketService.getAllTickets(); // Fetch all tickets for admin
+            tickets = await ticketService.getAllTickets(); // Fetch all tickets for admin
             return res.render('ticket/pages/admin_dashboard', { 
                 user: req.user, 
                 title: 'Admin Dashboard', 
@@ -247,21 +262,25 @@ router.get('/dashboard', async (req, res) => {
             });
         }
 
-        // If the user is a regular user, show their submitted tickets
+        // If the user is a regular user, fetch only their submitted tickets
         if (req.user.role === 'user') {
-            const userTickets = await ticketService.getTicketsByUserId(req.user.id); // Fetch user's tickets
+            tickets = await ticketService.getTicketsByUserId(req.user.id); // Fetch user's tickets
             return res.render('ticket/pages/user_dashboard', { 
                 user: req.user, 
                 title: 'User Dashboard', 
-                tickets: userTickets 
+                tickets 
             });
         }
+
+        // Handle any unexpected roles by redirecting to login or throwing an error
+        return res.redirect('/login');
 
     } catch (error) {
         console.error('Error retrieving tickets:', error);
         return res.status(500).send('Error retrieving tickets');
     }
 });
+
 
 //Success route
 router.get('/ticket/success', (req, res) => {

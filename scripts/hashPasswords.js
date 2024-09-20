@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const connection = require('../src/db.js');
 
-
 async function hashPasswords() {
     const users = [
         { username: 'admin', password: 'admin' },
