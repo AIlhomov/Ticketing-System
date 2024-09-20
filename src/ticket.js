@@ -9,31 +9,37 @@ const connection = require('./db.js');
 const multer = require('multer');
 const path = require('path');
 
-async function createTicket(title, description, department, email, file) {
+async function createTicket(title, description, department, email, files) {
     return new Promise((resolve, reject) => {
-        
-        const query = 'INSERT INTO tickets (title, description, department, status) VALUES (?, ?, ?, ?)';
-        connection.query(query, [title, description, department, email, 'open'], (err, result) => {
+        // Insert the ticket into the tickets table
+        const query = 'INSERT INTO tickets (title, description, department, status, email) VALUES (?, ?, ?, ?, ?)';
+        connection.query(query, [title, description, department, 'open', email], (err, result) => {
             if (err) {
                 reject(err);
                 return;
-            } 
+            }
 
             const ticketId = result.insertId;
 
-            if (file) {
-                const attachmentQuery = 'INSERT INTO attachments (ticket_id, file_name, file_path, mime_type, size) VALUES (?, ?, ?, ?, ?)';
-                connection.query(attachmentQuery, [ticketId, file.filename, file.path, file.mimetype, file.size], (err, attachmentResult) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(attachmentResult);
-                    }
-                });
-            } else {
+            // Check if files is an array and contains uploaded files
+            if (!files || !Array.isArray(files) || files.length === 0) {
                 resolve(result);
+                return;
             }
-            
+
+            // Prepare multiple file insertions for attachments
+            const attachmentQuery = 'INSERT INTO attachments (ticket_id, file_name, file_path, mime_type, size) VALUES ?';
+            const attachmentData = files.map(file => [
+                ticketId, file.originalname, file.path, file.mimetype, file.size
+            ]);
+
+            connection.query(attachmentQuery, [attachmentData], (err, attachmentResult) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(attachmentResult);
+                }
+            });
         });
     });
 }
@@ -154,26 +160,27 @@ async function getAttachmentByTicketId(ticketId) {
 
 // Save the attachment data to the database
 async function saveAttachment(attachmentData) {
+    const query = 'INSERT INTO attachments (ticket_id, file_name, file_path, mime_type, size) VALUES (?, ?, ?, ?, ?)';
+    const values = [
+        attachmentData.ticket_id,
+        attachmentData.file_name,
+        attachmentData.file_path,
+        attachmentData.mime_type,
+        attachmentData.size
+    ];
+    console.log('Inserting into attachments:', attachmentData);
+    
     return new Promise((resolve, reject) => {
-        const query = `INSERT INTO attachments (ticket_id, file_name, file_path, mime_type, size) 
-                       VALUES (?, ?, ?, ?, ?)`;
-        const values = [
-            attachmentData.ticket_id,
-            attachmentData.file_name,
-            attachmentData.file_path,
-            attachmentData.mime_type,
-            attachmentData.size
-        ];
-
         connection.query(query, values, (err, result) => {
             if (err) {
-                reject(err);
-            } else {
-                resolve(result);
+                console.error('Error saving attachment:', err);
+                return reject(err);
             }
+            resolve(result);
         });
     });
 }
+
 
 // Function to fetch all tickets (for admin)
 async function getAllTickets() {

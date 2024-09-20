@@ -33,7 +33,6 @@ router.get('/ticket/new', (req, res) => {
 
 // Create a new ticket
 router.post('/ticket/new', (req, res) => {
-
     ticketService.uploadFiles(req, res, async (err) => {
         if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
             return res.status(400).send('Error: Each file must be less than 1MB.');
@@ -45,12 +44,11 @@ router.post('/ticket/new', (req, res) => {
 
         try {
             console.log('Uploaded Files:', req.files);
-            console.log('Form Data:', req.body); 
+            console.log('Form Data:', req.body);
 
             const userId = req.user ? req.user.id : null; // Store user ID if logged in
             const { title, description, department, email } = req.body;
 
-            // Check if the user is logged in or not
             let userEmail;
             if (req.user) {
                 userEmail = req.user.email; // Use the email of the logged-in user
@@ -61,25 +59,10 @@ router.post('/ticket/new', (req, res) => {
                 }
             }
 
-            // Create the ticket in the database
-            const ticket = await ticketService.createTicket(title, description, department, userEmail, userId);
+            // Create the ticket in the database and pass the files array
+            const ticket = await ticketService.createTicket(title, description, department, userEmail, req.files);
 
-            // If files were uploaded, save the attachments to the database
-            if (req.files && req.files.length > 0) {
-                const attachmentPromises = req.files.map(file => {
-                    const attachmentData = {
-                        ticket_id: ticket.insertId,
-                        file_name: file.filename,
-                        file_path: file.path,
-                        mime_type: file.mimetype,
-                        size: file.size
-                    };
-                    return ticketService.saveAttachment(attachmentData);
-                });
-
-                await Promise.all(attachmentPromises);
-            }
-
+            // Redirect to success page or confirmation message
             res.redirect('/ticket/success');
         } catch (error) {
             console.error('Error creating ticket:', error);
@@ -87,6 +70,9 @@ router.post('/ticket/new', (req, res) => {
         }
     });
 });
+
+
+
 
 router.post('/ticket/update-status/:id', async (req, res) => {
     const ticketId = req.params.id;
