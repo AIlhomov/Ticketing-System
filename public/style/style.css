@@ -201,3 +201,79 @@ a.btn-primary:hover {
     margin-bottom: 10px;
     display: block;
 }
+
+/* Button Styling (put button in middle) */
+.btn-danger {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px 0;
+    text-align: center;
+    background: linear-gradient(45deg, #4285F4, #34A853, #FBBC05, #EA4335);
+    background-size: 400% 400%;
+    color: white;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-position 0.3s ease, transform 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+/* Center the login form */
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+/* Input field styling */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Label styling */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+/* Additional styling for the form */
+.login-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login-form p {
+    text-align: center;
+    color: #666;
+    margin-top: 10px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c2c7;
+    border-radius: 4px;
+}

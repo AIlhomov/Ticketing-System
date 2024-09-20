@@ -78,7 +78,7 @@ router.post('/ticket/new', (req, res) => {
                 await Promise.all(attachmentPromises);
             }
 
-            res.redirect('/ticket/list');
+            res.redirect('/ticket/success');
         } catch (error) {
             console.error('Error creating ticket:', error);
             res.status(500).send('Error creating ticket');
@@ -260,5 +260,10 @@ router.get('/dashboard', (req, res) => {
 
 });
 
+
+//Success route
+router.get('/ticket/success', (req, res) => {
+    res.render('ticket/pages/ticket_success', { title: 'Success' });
+});
 
 module.exports = router;
