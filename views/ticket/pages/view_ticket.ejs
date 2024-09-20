@@ -12,13 +12,14 @@
             <p><strong>Attached Files:</strong></p>
             <div class="row">
                 <% attachments.forEach(attachment => { %>
-                    <div class="col-md-4 mb-4">
-                        <% if (attachment.mime_type.startsWith('image')) { %>
-                            <img src="/uploads/<%= attachment.file_name %>" alt="Attached Image" class="img-fluid img-thumbnail" style="max-width: 100%; height: auto;">
-                        <% } else { %>
-                            <a href="/uploads/<%= attachment.file_name %>" download>Download Attachment</a>
-                        <% } %>
-                    </div>
+                    <% if (attachment.mime_type.startsWith('image')) { %>
+                        <img src="/uploads/<%= attachment.file_name %>" 
+                             alt="Attached Image" 
+                             class="img-fluid ticket-image" 
+                             onclick="openModal(this.src)" />
+                    <% } else { %>
+                        <a href="/uploads/<%= attachment.file_name %>" download>Download Attachment</a>
+                    <% } %>
                 <% }); %>
             </div>
         </div>
@@ -32,7 +33,14 @@
     <% } else { %>
         <a href="/dashboard" class="btn btn-secondary mt-4">Back to Dashboard</a>
     <% } %>
+</div>
 
+<!-- The Modal for Zooming -->
+<div id="myModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="imgModal">
 </div>
 
 <%- include('../partials/footer'); %>
+
+<script src="/js/modal.js"></script>
