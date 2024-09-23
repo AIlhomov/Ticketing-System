@@ -385,3 +385,27 @@ a.btn-primary:hover {
     from {transform: scale(0)}
     to {transform: scale(1)}
 }
+
+.jumbotron {
+    background-color: #f8f9fa;
+    padding: 2rem 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.jumbotron .btn {
+    margin: 10px;
+}
+
+.fa {
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+h3 {
+    margin-top: 15px;
+}
+
+.text-center p {
+    margin-top: 10px;
+}

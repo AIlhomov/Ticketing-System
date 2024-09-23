@@ -10,7 +10,11 @@ const saltRounds = 10;
 const { isAdmin, isUser } = require('../middleware/role');
 
 router.get('/', (req, res) => {
-    res.redirect('ticket/index');
+    res.redirect('ticket/home');
+});
+
+router.get('/home', (req, res) => {
+    res.render('ticket/pages/homepage', { title: 'Home' });
 });
 
 router.get('/ticket/index', (req, res) => {
@@ -33,6 +37,11 @@ router.get('/ticket/new', (req, res) => {
 
 // Create a new ticket
 router.post('/ticket/new', (req, res) => {
+
+    if (!req.user) {
+        return res.status(401).send('Unauthorized: User not logged in');
+    }
+
     ticketService.uploadFiles(req, res, async (err) => {
         if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
             return res.status(400).send('Error: Each file must be less than 1MB.');
@@ -46,21 +55,12 @@ router.post('/ticket/new', (req, res) => {
             console.log('Uploaded Files:', req.files);
             console.log('Form Data:', req.body);
 
-            const userId = req.user ? req.user.id : null; // Store user ID if logged in
+            const userId = req.user.id; // Store user ID if logged in
             const { title, description, department, email } = req.body;
+            const userEmail = req.user.email; // Get the logged-in user's email
 
-            let userEmail;
-            if (req.user) {
-                userEmail = req.user.email; // Use the email of the logged-in user
-            } else {
-                userEmail = email; // Use the provided email for anonymous users
-                if (!userEmail) {
-                    return res.status(400).send('Error: Email is required for anonymous ticket submissions.');
-                }
-            }
-
-            // Create the ticket in the database and pass the user_id (if logged in) or email (if anonymous)
-            const ticket = await ticketService.createTicket(title, description, department, userEmail, userId, req.files);
+            // Create the ticket in the database and pass the files array
+            const ticket = await ticketService.createTicket(title, description, department, userEmail, req.files, userId);
 
             // Redirect to success page or confirmation message
             res.redirect('/ticket/success');
