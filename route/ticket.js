@@ -152,10 +152,10 @@ router.get('/ticket/list', isAdmin, async (req, res) => {
 // -----------------------------------------------
 // Registration route
 router.post('/register', async (req, res) => {
-    const { username, password, email } = req.body;
+    const { username, password, email, role } = req.body;
 
     try {
-        await userService.createUser(username, password, email);
+        await userService.createUser(username, password, email, role);
         res.redirect('/login');
     } catch (error) {
         console.error('Error creating user:', error);
@@ -163,12 +163,10 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Render the login page
 router.get('/login', (req, res) => {
     res.render('ticket/pages/login', { title: 'Login' });
 });
 
-// Handle login form submission using a local strategy
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) return next(err);
