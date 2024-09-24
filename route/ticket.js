@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/home', (req, res) => {
-    res.render('ticket/pages/homepage', { title: 'Home' });
+    res.render('ticket/pages/homepage', { title: 'Home', user: req.user || null });
 });
 
 router.get('/ticket/index', (req, res) => {
