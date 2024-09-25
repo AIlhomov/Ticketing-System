@@ -1,3 +1,7 @@
+/**
+ * Passport configuration
+ */
+"use strict";
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -5,7 +9,6 @@ const bcrypt = require('bcrypt');
 const connection = require('./db');
 require('dotenv').config();
 
-// Local strategy for username/password login
 passport.use(new LocalStrategy((username, password, done) => {
     const query = 'SELECT * FROM users WHERE username = ?';
     connection.query(query, [username], (err, results) => {
@@ -14,7 +17,6 @@ passport.use(new LocalStrategy((username, password, done) => {
 
         const user = results[0];
 
-        // Compare entered password with the stored hashed password
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) return done(err);
             if (isMatch) {
@@ -41,7 +43,6 @@ passport.use(new GoogleStrategy({
         if (err) return done(err);
 
         if (results.length === 0) {
-            // Insert new user into the database
             const insertQuery = 'INSERT INTO users (google_id, email, role) VALUES (?, ?, ?)';
             connection.query(insertQuery, [googleId, email, 'user'], (err, result) => {
                 if (err) return done(err);
@@ -57,14 +58,14 @@ passport.use(new GoogleStrategy({
 
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);  // Store user ID in the session
+    done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
     const query = 'SELECT * FROM users WHERE id = ?';
     connection.query(query, [id], (err, results) => {
         if (err) return done(err);
-        done(null, results[0]);  // Retrieve full user object from DB
+        done(null, results[0]);
     });
 });
 

@@ -1,5 +1,4 @@
 /**
- * @swagger
  * Module for ticket
  */
 
@@ -32,7 +31,7 @@ async function createTicket(title, description, department, email, userId, files
                     }
                 });
             } else {
-                resolve(result); // No files, just resolve with the ticket creation result
+                resolve(result);
             }
         });
     });
@@ -67,13 +66,11 @@ async function getSortedTickets(sort, order) {
             if (err) {
                 reject(err);
             } else {
-                resolve(tickets); // Return the sorted tickets
+                resolve(tickets);
             }
         });
     });
 }
-
-
 
 // Ticket status
 async function updateTicketStatus(id, status) {
@@ -89,7 +86,6 @@ async function updateTicketStatus(id, status) {
     });
 }
 
-// Fetch a single ticket by ID
 async function getTicketById(id) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM tickets WHERE id = ?';
@@ -108,11 +104,11 @@ async function getTicketById(id) {
 // Storage configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Ensure this directory exists
+        cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const sanitizedFilename = file.originalname.replace(/\s+/g, '_'); // Replace spaces with underscores
+        const sanitizedFilename = file.originalname.replace(/\s+/g, '_');
         cb(null, uniqueSuffix + '-' + sanitizedFilename);
     }
 });
@@ -135,7 +131,7 @@ const uploadFiles = multer({
     storage: storage,
     limits: { fileSize: 1 * 1024 * 1024, files: 5 }, // 1MB per file, up to 5 files
     fileFilter: fileFilter
-}).array('file', 5); // Expecting up to 5 files from 'attachments' field
+}).array('file', 5);
 
 // Get attachment by ticket ID
 async function getAttachmentByTicketId(ticketId) {
@@ -145,9 +141,9 @@ async function getAttachmentByTicketId(ticketId) {
             if (err) {
                 reject(err);
             } else if (result.length === 0) {
-                resolve(null); // No attachment found
+                resolve(null);
             } else {
-                resolve(result[0]); // Return the attachment
+                resolve(result[0]);
             }
         });
     });

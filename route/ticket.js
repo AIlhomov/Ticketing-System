@@ -55,22 +55,20 @@ router.post('/ticket/new', (req, res) => {
             console.log('Uploaded Files:', req.files);
             console.log('Form Data:', req.body);
 
-            const userId = req.user ? req.user.id : null; // Ensure this is an integer, not an object
+            const userId = req.user ? req.user.id : null;
             const { title, description, department, email } = req.body;
 
             let userEmail;
             if (req.user) {
-                userEmail = req.user.email; // Use the email of the logged-in user
+                userEmail = req.user.email;
             } else {
-                userEmail = email; // Use the provided email for anonymous users
+                userEmail = email;
                 if (!userEmail) {
                     return res.status(400).send('Error: Email is required for anonymous ticket submissions.');
                 }
             }
-            // Create the ticket in the database and pass the files array
             const ticket = await ticketService.createTicket(title, description, department, userEmail, userId, req.files);
 
-            // Redirect to success page or confirmation message
             res.redirect('/ticket/success');
         } catch (error) {
             console.error('Error creating ticket:', error);
@@ -101,21 +99,18 @@ router.get('/ticket/view/:id', async (req, res) => {
     const ticketId = req.params.id;
 
     try {
-        // Fetch ticket details
         const ticket = await ticketService.getTicketById(ticketId);
 
-        // Fetch related attachments
         const attachments = await ticketService.getAttachmentsByTicketId(ticketId);
 
         if (!ticket) {
             return res.status(404).send('Ticket not found');
         }
 
-        // Render the view_ticket page and pass ticket and attachments data
         res.render('ticket/pages/view_ticket', {
-            user: req.user,  // Pass the user for role-based rendering
+            user: req.user,
             ticket: ticket,
-            attachments: attachments  // Pass attachments here
+            attachments: attachments
         });
     } catch (error) {
         console.error('Error retrieving ticket details:', error);
@@ -180,7 +175,6 @@ router.post('/login', (req, res, next) => {
         if (err) return next(err);
 
         if (!user) {
-            // Show error message if login failed
             return res.render('ticket/pages/login', { 
                 message: info ? info.message : 'Login failed. Please try again.' 
             });
@@ -189,13 +183,12 @@ router.post('/login', (req, res, next) => {
         req.logIn(user, (err) => {
             if (err) return next(err);
 
-            // Redirect to dashboard based on user role
             if (user.role === 'admin') {
                 return res.redirect('/dashboard');
             } else if (user.role === 'user') {
-                return res.redirect('/dashboard'); // Adjust according to your flow
+                return res.redirect('/dashboard');
             } else {
-                return res.redirect('/'); // Default to home page
+                return res.redirect('/');
             }
         });
     })(req, res, next);
@@ -214,11 +207,11 @@ router.get('/auth/google/callback', passport.authenticate('google', { failureRed
 router.get('/logout', (req, res, next) => {
     req.logout(function (err) {
         if (err) { return next(err); }
-        res.redirect('/login'); // Redirect to login or another page after logging out
+        res.redirect('/login'); 
     });
 });
 // --------------------------------------------------------------------------
-// Show register page
+// Register page
 router.get('/register', (req, res) => {
     res.render('ticket/pages/register', { title: 'Register' });
 });
@@ -227,14 +220,12 @@ router.get('/register', (req, res) => {
 router.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
 
-    // Hash the password
     bcrypt.hash(password, saltRounds, function(err, hash) {
         if (err) {
             console.error(err);
             return res.status(500).send('Server error');
         }
 
-        // Insert the user into the database
         const query = 'INSERT INTO users (username, password, email) VALUES (?, ?, ?)';
         connection.query(query, [username, hash, email], (err, result) => {
             if (err) {
@@ -242,7 +233,6 @@ router.post('/register', async (req, res) => {
                 return res.status(500).send('Database error');
             }
 
-            // Redirect to the login page after successful registration
             res.redirect('/login');
         });
     });
@@ -250,7 +240,6 @@ router.post('/register', async (req, res) => {
 
 // Dashboard route
 router.get('/dashboard', async (req, res) => {
-    // Check if the user is logged in
     if (!req.user) {
         return res.redirect('/login');
     }
@@ -258,9 +247,8 @@ router.get('/dashboard', async (req, res) => {
     try {
         let tickets = [];
 
-        // If the user is an admin, fetch all tickets
         if (req.user.role === 'admin') {
-            tickets = await ticketService.getAllTickets(); // Fetch all tickets for admin
+            tickets = await ticketService.getAllTickets();
             return res.render('ticket/pages/admin_dashboard', { 
                 user: req.user, 
                 title: 'Admin Dashboard', 
@@ -268,9 +256,8 @@ router.get('/dashboard', async (req, res) => {
             });
         }
 
-        // If the user is a regular user, fetch only their submitted tickets
         if (req.user.role === 'user') {
-            tickets = await ticketService.getTicketsByUserId(req.user.id); // Fetch user's tickets
+            tickets = await ticketService.getTicketsByUserId(req.user.id);
             return res.render('ticket/pages/user_dashboard', { 
                 user: req.user, 
                 title: 'User Dashboard', 
@@ -278,7 +265,6 @@ router.get('/dashboard', async (req, res) => {
             });
         }
 
-        // Handle any unexpected roles by redirecting to login or throwing an error
         return res.redirect('/login');
 
     } catch (error) {

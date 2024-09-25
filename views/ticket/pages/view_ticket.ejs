@@ -27,7 +27,6 @@
         <p>No attachment available for this ticket.</p>
     <% } %>
 
-    <!-- Conditionally render the back button based on user role -->
     <% if (user.role === 'admin') { %>
         <a href="/ticket/list" class="btn btn-secondary mt-4">Back to List</a>
     <% } else { %>

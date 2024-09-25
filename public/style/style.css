@@ -18,7 +18,6 @@ footer .text-center {
     margin: 0;
 }
 
-/* Responsive styles based on device*/
 @media (max-width: 768px) {
     footer {
         padding: 15px 0;
@@ -148,8 +147,6 @@ a.btn-primary:hover {
     background-color: #e0a800;
 }
 
-/*navBar*/
-
 /* Navbar Styling */
 .navbar {
     background-color: #333;
@@ -180,7 +177,6 @@ a.btn-primary:hover {
     text-decoration: none;
 }
 
-/* Mobile Navbar Styling */
 .navbar-toggler {
     border: none;
 }
@@ -189,20 +185,17 @@ a.btn-primary:hover {
     background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-/* Active link styling */
 .nav-link.active {
     color: #00d1b2;
     font-weight: bold;
 }
 
 
-/* Spacing between action buttons */
 .action-btn {
     margin-bottom: 10px;
     display: block;
 }
 
-/* Button Styling (put button in middle) */
 .btn-danger {
     display: block;
     width: 200px;
@@ -222,7 +215,7 @@ a.btn-primary:hover {
     background-color: #c82333;
     transform: scale(1.05);
 }
-/* Center the login form */
+
 .login-form {
     width: 100%;
     max-width: 400px;
@@ -233,12 +226,10 @@ a.btn-primary:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form group styling */
 .form-group {
     margin-bottom: 1rem;
 }
 
-/* Input field styling */
 .form-group input {
     width: 100%;
     padding: 10px;
@@ -247,7 +238,6 @@ a.btn-primary:hover {
     font-size: 1rem;
 }
 
-/* Label styling */
 .form-group label {
     display: block;
     margin-bottom: 5px;
@@ -256,7 +246,6 @@ a.btn-primary:hover {
 }
 
 
-/* Additional styling for the form */
 .login-form h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -303,9 +292,9 @@ a.btn-primary:hover {
 .attachments {
     margin-top: 30px;
     display: flex;
-    flex-wrap: wrap; /* Allows the images to wrap to the next row */
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 15px; /* Adds space between images */
+    gap: 15px;
 }
 
 .attachments img {

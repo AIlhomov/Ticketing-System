@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> | Support Ticket System</title>
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/style/style.css">
     
-    <!-- Additional meta tags -->
     <meta name="description" content="Support IT Ticket System">
     <meta name="author" content="Abduvohid Ilhomov">
     <link rel="icon" href="/style/favicon.ico">
@@ -27,7 +24,6 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <% if (user) { %> 
-                        <!-- Only logged-in users can create new tickets -->
                         <li class="nav-item"><a class="nav-link" href="/ticket/new">Create New Ticket</a></li>
                     <% } %>
                     <% if (user && user.role === 'admin') { %>
