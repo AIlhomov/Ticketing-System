@@ -55,12 +55,20 @@ router.post('/ticket/new', (req, res) => {
             console.log('Uploaded Files:', req.files);
             console.log('Form Data:', req.body);
 
-            const userId = req.user.id; // Store user ID if logged in
+            const userId = req.user ? req.user.id : null; // Ensure this is an integer, not an object
             const { title, description, department, email } = req.body;
-            const userEmail = req.user.email; // Get the logged-in user's email
 
+            let userEmail;
+            if (req.user) {
+                userEmail = req.user.email; // Use the email of the logged-in user
+            } else {
+                userEmail = email; // Use the provided email for anonymous users
+                if (!userEmail) {
+                    return res.status(400).send('Error: Email is required for anonymous ticket submissions.');
+                }
+            }
             // Create the ticket in the database and pass the files array
-            const ticket = await ticketService.createTicket(title, description, department, userEmail, req.files, userId);
+            const ticket = await ticketService.createTicket(title, description, department, userEmail, userId, req.files);
 
             // Redirect to success page or confirmation message
             res.redirect('/ticket/success');
