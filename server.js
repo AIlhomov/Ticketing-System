@@ -23,15 +23,15 @@ app.use(flash());
 
 app.use(session({
     secret: 'keyboardCat',
-    resave: false, // Prevents session being saved back to the session store if it wasn't modified
-    saveUninitialized: false, // Forces a session that is "uninitialized" to be saved to the store
+    resave: false,
+    saveUninitialized: false,
     store: new session.MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
-    }), // Stores session data in memory
-    cookie: { secure: false } // Secure should be true in production to force HTTPS
+        checkPeriod: 86400000
+    }),
+    cookie: { secure: false }
 }));
 app.use((req, res, next) => {
-    res.locals.user = req.user || null; // `req.user` is populated by passport if user is logged in
+    res.locals.user = req.user || null;
     res.locals.error = req.flash('error');
     res.locals.message = req.flash('message');
     next();
