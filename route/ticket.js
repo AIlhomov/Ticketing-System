@@ -10,7 +10,11 @@ const saltRounds = 10;
 const { isAdmin, isUser } = require('../middleware/role');
 
 router.get('/', (req, res) => {
-    res.redirect('ticket/home');
+    if (req.user) {
+        res.redirect('/dashboard');
+    } else {
+        res.redirect('/home');
+    }
 });
 
 router.get('/home', (req, res) => {
