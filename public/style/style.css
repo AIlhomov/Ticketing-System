@@ -147,43 +147,6 @@ a.btn-primary:hover {
     background-color: #e0a800;
 }
 
-/* Navbar Styling */
-.navbar {
-    background-color: #333;
-    padding: 1rem;
-    border-radius: 4px;
-}
-
-.navbar-brand {
-    color: white;
-    font-weight: bold;
-    font-size: 1.5rem;
-    text-transform: uppercase;
-}
-
-.navbar-brand:hover {
-    color: #ddd;
-    text-decoration: none;
-}
-
-.navbar-nav .nav-item .nav-link {
-    color: white;
-    margin-left: 15px;
-    font-size: 1.1rem;
-}
-
-.navbar-nav .nav-item .nav-link:hover {
-    color: #ddd;
-    text-decoration: none;
-}
-
-.navbar-toggler {
-    border: none;
-}
-
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-}
 
 .nav-link.active {
     color: #00d1b2;
@@ -429,3 +392,84 @@ i.fa {
 .btn-secondary:hover {
     background-color: #0056b3;
 }
+
+/* Navbar */
+/* Sidebar Navigation */
+.navbar {
+    height: 100vh;
+    width: 200px;
+    background-color: #343a40; /* Dark background for the sidebar */
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+}
+
+.navbar .navbar-brand {
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.navbar .nav-link {
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    white-space: normal; /* Allows the text to wrap to the next line */
+    word-wrap: break-word; /* Forces the text to break within the container */
+    max-width: 180px; /* Ensures it remains within the sidebar width */
+}
+
+.navbar .nav-link:hover {
+    background-color: #007bff;
+    color: white;
+    padding-left: 10px;
+    transition: 0.3s ease;
+}
+
+.navbar .nav-item {
+    padding: 5px 0;
+}
+
+/* Fix for Welcome text overlapping */
+.main-content {
+    margin-left: 220px;
+    padding-top: 20px;
+}
+
+/* Add color to the dashboard */
+.main-content h1 {
+    color: #007bff; /* Blue color for the heading */
+}
+
+.main-content .btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.main-content .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* General body text color and styling */
+body {
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #343a40;
+    color: #fff;
+}
+
+
+
+
+
+
+
+
