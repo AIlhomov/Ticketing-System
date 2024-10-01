@@ -3,29 +3,34 @@
 <div class="container">
     <h1>Welcome to the Admin Dashboard, <%= user.username || user.email %>!</h1>
     
-    <h2>All Tickets</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Department</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% tickets.forEach(ticket => { %>
-            <tr>
-                <td><%= ticket.id %></td>
-                <td><%= ticket.title %></td>
-                <td><%= ticket.description %></td>
-                <td><%= ticket.department %></td>
-                <td><%= ticket.status %></td>
-            </tr>
-            <% }) %>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Open Tickets</h5>
+                    <p class="card-text"><%= stats.openTickets %> tickets are currently open.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Closed Tickets</h5>
+                    <p class="card-text"><%= stats.closedTickets %> tickets are closed.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">In Progress Tickets</h5>
+                    <p class="card-text"><%= stats.inProgressTickets %> tickets are in progress.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <%- include('../partials/footer'); %>

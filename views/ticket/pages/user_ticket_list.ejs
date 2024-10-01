@@ -1,0 +1,38 @@
+<%- include('../partials/header', { title: 'My Tickets' }); %>
+
+<div class="container">
+    <h1>My Tickets</h1>
+
+    <% if (tickets.length === 0) { %>
+        <p>You haven't created any tickets yet.</p>
+    <% } else { %>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% tickets.forEach(ticket => { %>
+                <tr>
+                    <td><%= ticket.id %></td>
+                    <td><%= ticket.title %></td>
+                    <td><%= ticket.description %></td>
+                    <td><%= ticket.status %></td>
+                    <td>
+                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info">View</a>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+
+    <a href="/dashboard" class="btn btn-secondary mt-4">Back to Dashboard</a>
+</div>
+
+<%- include('../partials/footer'); %>

@@ -206,6 +206,38 @@ async function getAttachmentsByTicketId(ticketId) {
         });
     });
 }
+
+
+// Count tickets by status for admin
+async function countTicketsByStatus(status) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(*) AS count FROM tickets WHERE status = ?';
+        connection.query(query, [status], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result[0].count);
+            }
+        });
+    });
+}
+
+// Count tickets by status for user
+async function countTicketsByUserAndStatus(userId, status) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(*) AS count FROM tickets WHERE user_id = ? AND status = ?';
+        connection.query(query, [userId, status], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result[0].count);
+            }
+        });
+    });
+}
+
+
+
 module.exports = {
     createTicket,
     getTickets,
@@ -217,5 +249,7 @@ module.exports = {
     saveAttachment,
     getAllTickets,
     getTicketsByUserId,
-    getAttachmentsByTicketId
+    getAttachmentsByTicketId,
+    countTicketsByStatus,
+    countTicketsByUserAndStatus
 };

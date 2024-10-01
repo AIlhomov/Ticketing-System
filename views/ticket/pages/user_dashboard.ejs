@@ -2,41 +2,16 @@
 
 <div class="container">
     <h1>Welcome to Your Dashboard, <%= user.username || user.email %>!</h1>
-    
-    <p>Here, you can create new tickets for any issues you are facing:</p>
-    <a href="/ticket/new" class="btn btn-primary">Create New Ticket</a>
-    
-    <h2 class="tickets-your-view-middle">Your Tickets</h2>
-    <% if (tickets.length === 0) { %>
-        <p>You haven't created any tickets yet.</p>
-    <% } else { %>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Department</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% tickets.forEach(ticket => { %>
-                <tr>
-                    <td><%= ticket.id %></td>
-                    <td><%= ticket.title %></td>
-                    <td><%= ticket.description %></td>
-                    <td><%= ticket.department %></td>
-                    <td><%= ticket.status %></td>
-                    <td>
-                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info">View</a>
-                    </td>
-                </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    <% } %>
+
+    <p>Here, you can view the status of your tickets:</p>
+    <p><strong>Open Tickets:</strong> <%= ticketStats.open %> of your tickets are currently open.</p>
+    <p><strong>Closed Tickets:</strong> <%= ticketStats.closed %> of your tickets are closed.</p>
+    <p><strong>In Progress Tickets:</strong> <%= ticketStats.in_progress %> of your tickets are in progress.</p>
+
+    <hr>
+
+    <p>If you want to see a detailed list of your tickets, click the button below:</p>
+    <a href="/dashboard/tickets" class="btn btn-primary">View My Tickets</a>
 </div>
 
 <%- include('../partials/footer'); %>

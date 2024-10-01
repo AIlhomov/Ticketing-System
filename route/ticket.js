@@ -250,27 +250,65 @@ router.get('/dashboard', async (req, res) => {
 
     try {
         let tickets = [];
+        let ticketStats = {
+            open: 0,
+            closed: 0,
+            in_progress: 0
+        };
 
         if (req.user.role === 'admin') {
             tickets = await ticketService.getAllTickets();
+        } else if (req.user.role === 'user') {
+            tickets = await ticketService.getTicketsByUserId(req.user.id);
+        }
+
+        // Calculate ticket stats
+        tickets.forEach(ticket => {
+            if (ticket.status === 'open') {
+                ticketStats.open++;
+            } else if (ticket.status === 'closed') {
+                ticketStats.closed++;
+            } else if (ticket.status === 'in_progress') {
+                ticketStats.in_progress++;
+            }
+        });
+
+        // Render appropriate dashboard based on role
+        if (req.user.role === 'admin') {
             return res.render('ticket/pages/admin_dashboard', { 
                 user: req.user, 
                 title: 'Admin Dashboard', 
+                ticketStats, 
                 tickets 
             });
         }
 
-        if (req.user.role === 'user') {
-            tickets = await ticketService.getTicketsByUserId(req.user.id);
-            return res.render('ticket/pages/user_dashboard', { 
-                user: req.user, 
-                title: 'User Dashboard', 
-                tickets 
-            });
-        }
+        return res.render('ticket/pages/user_dashboard', { 
+            user: req.user, 
+            title: 'User Dashboard', 
+            ticketStats 
+        });
 
+    } catch (error) {
+        console.error('Error retrieving tickets:', error);
+        return res.status(500).send('Error retrieving tickets');
+    }
+});
+
+
+// Route for viewing the user's tickets
+router.get('/dashboard/tickets', async (req, res) => {
+    if (!req.user) {
         return res.redirect('/login');
+    }
 
+    try {
+        const tickets = await ticketService.getTicketsByUserId(req.user.id);
+        return res.render('ticket/pages/user_ticket_list', {
+            user: req.user,
+            title: 'My Tickets',
+            tickets
+        });
     } catch (error) {
         console.error('Error retrieving tickets:', error);
         return res.status(500).send('Error retrieving tickets');
