@@ -468,6 +468,14 @@ body {
 
 
 
+/* To handle long descriptions */
+table td.description-column {
+    max-width: 200px;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 
 

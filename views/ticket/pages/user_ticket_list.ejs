@@ -1,7 +1,7 @@
 <%- include('../partials/header', { title: 'My Tickets' }); %>
 
 <div class="container">
-    <h1>My Tickets</h1>
+    <h1 class="text-center my-4">My Tickets</h1>
 
     <% if (tickets.length === 0) { %>
         <p>You haven't created any tickets yet.</p>
@@ -21,7 +21,7 @@
                 <tr>
                     <td><%= ticket.id %></td>
                     <td><%= ticket.title %></td>
-                    <td><%= ticket.description %></td>
+                    <td class="description-column"><%= ticket.description %></td>
                     <td><%= ticket.status %></td>
                     <td>
                         <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info">View</a>
