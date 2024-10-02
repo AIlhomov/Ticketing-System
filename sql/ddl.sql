@@ -12,6 +12,7 @@ CREATE TABLE tickets (
     status VARCHAR(50) DEFAULT 'open',
     email VARCHAR(255),
     user_id INT,
+    claimed_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

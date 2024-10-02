@@ -1,37 +1,59 @@
 <%- include('../partials/header', { title: 'View Ticket' }); %>
 <div class="container">
-    <h1>Ticket Details</h1>
+    <h1 class="text-center my-4">Ticket Details</h1>
 
-    <p><strong>Title:</strong> <%= ticket.title %></p>
-    <p><strong>Description:</strong> <%= ticket.description %></p>
-    <p><strong>Department:</strong> <%= ticket.department %></p>
-    <p><strong>Status:</strong> <%= ticket.status %></p>
+    <div class="ticket-details">
+        <p><strong>Title:</strong> <%= ticket.title %></p>
+        <p><strong>Description:</strong> <%= ticket.description %></p>
+        <p><strong>Claimed By:</strong> 
+            <% if (ticket.claimed_by) { %>
+                <%= user.username %>
+            <% } else { %>
+                <em>Not claimed yet</em>
+            <% } %>
+        </p>
+        
+        <p><strong>Status:</strong> <%= ticket.status %></p>
+    </div>
 
     <% if (attachments && attachments.length > 0) { %>
-        <div class="attachments">
+        <div class="attachments mt-4">
             <p><strong>Attached Files:</strong></p>
             <div class="row">
                 <% attachments.forEach(attachment => { %>
                     <% if (attachment.mime_type.startsWith('image')) { %>
-                        <img src="/uploads/<%= attachment.file_name %>" 
-                             alt="Attached Image" 
-                             class="img-fluid ticket-image" 
-                             onclick="openModal(this.src)" />
+                        <div class="col-md-4">
+                            <img src="/uploads/<%= attachment.file_name %>" 
+                                 alt="Attached Image" 
+                                 class="img-fluid ticket-image mb-2" 
+                                 onclick="openModal(this.src)" />
+                        </div>
                     <% } else { %>
-                        <a href="/uploads/<%= attachment.file_name %>" download>Download Attachment</a>
+                        <div class="col-md-12">
+                            <a href="/uploads/<%= attachment.file_name %>" class="btn btn-link" download>
+                                Download Attachment: <%= attachment.file_name %>
+                            </a>
+                        </div>
                     <% } %>
                 <% }); %>
             </div>
         </div>
     <% } else { %>
-        <p>No attachment available for this ticket.</p>
+        <p class="mt-3"><em>No attachment available for this ticket.</em></p>
     <% } %>
 
-    <% if (user.role === 'admin') { %>
-        <a href="/ticket/list" class="btn btn-secondary mt-4">Back to List</a>
-    <% } else { %>
-        <a href="/dashboard/tickets" class="btn btn-secondary mt-4">Back to my Tickets</a>
-    <% } %>
+    <div class="mt-4">
+        <% if (user.role === 'admin') { %>
+            <% if (!ticket.claimed_by) { %>
+                <form action="/ticket/claim/<%= ticket.id %>" method="POST">
+                    <button type="submit" class="btn btn-primary">Claim Ticket</button>
+                </form>
+            <% } %>
+            <a href="/ticket/list" class="btn btn-secondary mt-2">Back to List</a>
+        <% } else { %>
+            <a href="/dashboard/tickets" class="btn btn-secondary mt-2">Back to My Tickets</a>
+        <% } %>
+    </div>
 </div>
 
 <!-- The Modal for Zooming -->

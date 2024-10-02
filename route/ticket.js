@@ -114,7 +114,8 @@ router.get('/ticket/view/:id', async (req, res) => {
         res.render('ticket/pages/view_ticket', {
             user: req.user,
             ticket: ticket,
-            attachments: attachments
+            attachments: attachments,
+            role : req.user.role,
         });
     } catch (error) {
         console.error('Error retrieving ticket details:', error);
@@ -320,5 +321,26 @@ router.get('/dashboard/tickets', async (req, res) => {
 router.get('/ticket/success', (req, res) => {
     res.render('ticket/pages/ticket_success', { title: 'Success' });
 });
+
+//-------------------------------------------------------------------------------------------
+
+// Route to claim a ticket
+router.post('/ticket/claim/:id', async (req, res) => {
+    if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).send('Unauthorized');
+    }
+
+    const ticketId = req.params.id;
+
+    try {
+        await ticketService.claimTicket(ticketId, req.user.id);  // Save the user ID of the admin claiming the ticket
+        res.redirect(`/ticket/view/${ticketId}`);
+    } catch (error) {
+        console.error('Error claiming ticket:', error);
+        res.status(500).send('Error claiming ticket');
+    }
+});
+
+
 
 module.exports = router;

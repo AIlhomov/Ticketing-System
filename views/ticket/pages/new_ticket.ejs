@@ -7,17 +7,25 @@
             <label for="title">Title:</label>
             <input type="text" class="form-control" id="title" name="title" required>
         </div>
+
         <div class="form-group">
             <label for="description">Description:</label>
             <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
         </div>
+
         <div class="form-group">
-            <label for="department">Department:</label>
-            <input type="text" class="form-control" id="department" name="department" required>
+            <label for="category">Category:</label>
+            <select class="form-control" id="category" name="category" required>
+                <option value="" disabled selected>Select a category</option>
+                <option value="network">Network Issues</option>
+                <option value="software">Software Problems</option>
+                <option value="hardware">Hardware Malfunctions</option>
+                <option value="other">Other</option>
+            </select>
         </div>
 
         <div class="form-group">
-            <label for="file">Attach an Image/Document (Allowed formats: JPG, PNG, GIF, PDF. Max size: 1MB per file, 5MB total):</label>
+            <label for="file">Attach Files (Allowed formats: JPG, PNG, GIF, PDF. Max size: 1MB per file, 5MB total):</label>
             <input type="file" id="file" name="file" class="form-control" multiple>
         </div>
 

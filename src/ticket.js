@@ -236,6 +236,19 @@ async function countTicketsByUserAndStatus(userId, status) {
     });
 }
 
+async function claimTicket(ticketId, userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE tickets SET claimed_by = ? WHERE id = ?';
+        connection.query(query, [userId, ticketId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
 
 
 module.exports = {
@@ -251,5 +264,6 @@ module.exports = {
     getTicketsByUserId,
     getAttachmentsByTicketId,
     countTicketsByStatus,
-    countTicketsByUserAndStatus
+    countTicketsByUserAndStatus,
+    claimTicket
 };
