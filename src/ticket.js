@@ -88,7 +88,12 @@ async function updateTicketStatus(id, status) {
 
 async function getTicketById(id) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM tickets WHERE id = ?';
+        const query = `
+            SELECT t.*, u.username AS claimed_by_username
+            FROM tickets t
+            LEFT JOIN users u ON t.claimed_by = u.id
+            WHERE t.id = ?
+        `;
         connection.query(query, [id], (err, result) => {
             if (err) {
                 reject(err);
@@ -100,6 +105,7 @@ async function getTicketById(id) {
         });
     });
 }
+
 
 // Storage configuration
 const storage = multer.diskStorage({

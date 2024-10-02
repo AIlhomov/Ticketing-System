@@ -6,8 +6,8 @@
         <p><strong>Title:</strong> <%= ticket.title %></p>
         <p><strong>Description:</strong> <%= ticket.description %></p>
         <p><strong>Claimed By:</strong> 
-            <% if (ticket.claimed_by) { %>
-                <%= user.username %>
+            <% if (ticket.claimed_by_username) { %>
+                <%= ticket.claimed_by_username %>
             <% } else { %>
                 <em>Not claimed yet</em>
             <% } %>

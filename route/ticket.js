@@ -98,13 +98,12 @@ router.post('/ticket/update-status/:id', async (req, res) => {
     }
 });
 
-// View a single tickets details
+// View a single ticket's details
 router.get('/ticket/view/:id', async (req, res) => {
     const ticketId = req.params.id;
 
     try {
         const ticket = await ticketService.getTicketById(ticketId);
-
         const attachments = await ticketService.getAttachmentsByTicketId(ticketId);
 
         if (!ticket) {
@@ -115,7 +114,7 @@ router.get('/ticket/view/:id', async (req, res) => {
             user: req.user,
             ticket: ticket,
             attachments: attachments,
-            role : req.user.role,
+            role: req.user.role,
         });
     } catch (error) {
         console.error('Error retrieving ticket details:', error);
