@@ -262,18 +262,16 @@ router.get('/dashboard', async (req, res) => {
             tickets = await ticketService.getTicketsByUserId(req.user.id);
         }
 
-        // Calculate ticket stats
         tickets.forEach(ticket => {
-            if (ticket.status === 'open') {
+            if (ticket.status === 'open' || ticket.status === 'open\r') {
                 ticketStats.open++;
-            } else if (ticket.status === 'closed') {
+            } else if (ticket.status === 'closed' || ticket.status === 'closed\r') {
                 ticketStats.closed++;
-            } else if (ticket.status === 'in_progress') {
+            } else if (ticket.status === 'in_progress' || ticket.status === 'in_progress\r') {
                 ticketStats.in_progress++;
             }
         });
 
-        // Render appropriate dashboard based on role
         if (req.user.role === 'admin') {
             return res.render('ticket/pages/admin_dashboard', { 
                 user: req.user, 
