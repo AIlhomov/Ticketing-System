@@ -8,10 +8,10 @@ const connection = require('./db.js');
 const multer = require('multer');
 const path = require('path');
 
-async function createTicket(title, description, department, email, userId, files) {
+async function createTicket(title, description, category, email, userId, files) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO tickets (title, description, department, email, user_id, status) VALUES (?, ?, ?, ?, ?, ?)';
-        connection.query(query, [title, description, department, email, userId, 'open'], (err, result) => {
+        const query = 'INSERT INTO tickets (title, description, category, email, user_id, status) VALUES (?, ?, ?, ?, ?, ?)';
+        connection.query(query, [title, description, category, email, userId, 'open'], (err, result) => {
             if (err) {
                 reject(err);
                 return;
@@ -58,7 +58,7 @@ async function getTickets() {
 
 async function getSortedTickets(sort, order) {
     return new Promise((resolve, reject) => {
-        const validColumns = ['id', 'title', 'department', 'status'];
+        const validColumns = ['id', 'title', 'category', 'status'];
         const sortBy = validColumns.includes(sort) ? sort : 'id';
 
         const query = `SELECT * FROM tickets ORDER BY ${sortBy} ${order.toUpperCase()}`;

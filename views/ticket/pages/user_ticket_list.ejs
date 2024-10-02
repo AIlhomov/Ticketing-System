@@ -12,6 +12,7 @@
                     <th>ID</th>
                     <th>Title</th>
                     <th>Description</th>
+                    <th>Category</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -22,6 +23,7 @@
                     <td><%= ticket.id %></td>
                     <td><%= ticket.title %></td>
                     <td class="description-column"><%= ticket.description %></td>
+                    <td><%= ticket.category %></td>
                     <td><%= ticket.status %></td>
                     <td>
                         <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info">View</a>

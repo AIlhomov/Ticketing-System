@@ -8,7 +8,7 @@
                 <th><a href="?sort=id&order=<%= sort === 'id' && order === 'asc' ? 'desc' : 'asc' %>">ID</a></th>
                 <th><a href="?sort=title&order=<%= sort === 'title' && order === 'asc' ? 'desc' : 'asc' %>">Title</a></th>
                 <th>Description</th>
-                <th><a href="?sort=department&order=<%= sort === 'department' && order === 'asc' ? 'desc' : 'asc' %>">Department</a></th>
+                <th><a href="?sort=category&order=<%= sort === 'category' && order === 'asc' ? 'desc' : 'asc' %>">category</a></th>
                 <th><a href="?sort=status&order=<%= sort === 'status' && order === 'asc' ? 'desc' : 'asc' %>">Status</a></th>
                 <th>Actions</th>
             </tr>
@@ -19,7 +19,7 @@
                     <td><%= ticket.id %></td>
                     <td><%= ticket.title %></td>
                     <td><%= ticket.description %></td>
-                    <td><%= ticket.department %></td>
+                    <td><%= ticket.category %></td>
                     <td>
                         <form action="/ticket/update-status/<%= ticket.id %>" method="POST">
                             <select name="status" class="form-control" onchange="this.form.submit()">

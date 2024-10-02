@@ -1,21 +1,6 @@
-ID,Title,Description,Department,Status
-1,Ticket 1,Can't connect to the internet,Hardware,open
-2,Ticket 2,Need help with password reset,Hardware,open
-3,Ticket 3,Need help with email setup,Technical Support,open
-4,Ticket 4,Need help with security setup,Software Development,closed
-5,Ticket 5,Need help with password reset,Security,open
-6,Ticket 6,Can't connect to the internet,Technical Support,open
-7,Ticket 7,Need help with password reset,Technical Support,closed
-8,Ticket 8,Can't connect to the internet,Technical Support,open
-9,Ticket 9,Need help with network setup,Networking,open
-10,Ticket 10,Can't connect to the internet,Technical Support,closed
-11,Ticket 11,Need help with email setup,Security,closed
-12,Ticket 12,Need help with software installation,Security,open
-13,Ticket 13,Need help with software installation,Security,closed
-14,Ticket 14,Need help with email setup,Hardware,closed
-15,Ticket 15,Need help with password reset,Networking,closed
-16,Ticket 16,Need help with security setup,Software Development,closed
-17,Ticket 17,Need help with printer setup,Hardware,open
-18,Ticket 18,Can't connect to the internet,Security,open
-19,Ticket 19,Need help with email setup,Software Development,open
-20,Ticket 20,Need help with network setup,Software Development,open
+"id","title","description","category","status"
+"1","Ticket 1","Phone broken","Hardware","closed"
+"2","Ticket 2","Need help with printer setup","Hardware","open"
+"3","Ticket 3","Need help with password reset","Security","open"
+"4","Ticket 4","Need help with security setup","Security","open"
+"5","Ticket 5","Need help with software installation","Hardware","open"

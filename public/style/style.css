@@ -477,7 +477,10 @@ table td.description-column {
     text-overflow: ellipsis;
 }
 
-
-
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
 
 
