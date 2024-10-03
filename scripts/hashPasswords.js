@@ -21,4 +21,8 @@ async function hashPasswords() {
     }
 }
 
-hashPasswords();
+if (require.main === module) {
+    hashPasswords();
+}
+
+module.exports = hashPasswords;

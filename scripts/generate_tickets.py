@@ -22,9 +22,11 @@ headers = ["id", "title", "description", "category", "status"]
 ticket_data = generate_ticket_data(5)
 
 csv_file_path = "../sql/ticket.csv"
-with open(csv_file_path, mode='w', newline='') as file:
-    writer = csv.writer(file, quoting=csv.QUOTE_ALL)
-    writer.writerow(headers)
-    writer.writerows(ticket_data)
 
-print(f"CSV file created at {csv_file_path}")
+if __name__ == "__main__":
+    with open(csv_file_path, mode='w', newline='') as file:
+        writer = csv.writer(file, quoting=csv.QUOTE_ALL)
+        writer.writerow(headers)
+        writer.writerows(ticket_data)
+
+    print(f"CSV file created at {csv_file_path}")
