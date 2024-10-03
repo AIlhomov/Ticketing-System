@@ -1,3 +1,4 @@
+"use strict";
 const bcrypt = require('bcrypt');
 const connection = require('../src/db.js');
 
