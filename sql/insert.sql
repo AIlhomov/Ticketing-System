@@ -23,7 +23,7 @@ LOAD DATA LOCAL INFILE 'users.csv'
 INTO TABLE users
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\r\n'
+LINES TERMINATED BY '\n' -- Should it be with \r\n?
 IGNORE 1 ROWS
 (id, username, password, google_id, email, role)
 SET google_id = NULLIF(google_id, 'NULL');

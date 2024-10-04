@@ -19,42 +19,50 @@ const mysqlCommand = `mysql -h ${process.env.DB_HOST} -u ${process.env.DB_USER} 
 // Start the spinner animation
 startSpinner();
 
-exec(mysqlCommand, async (err, stdout, stderr) => {
-    stopSpinner();  // Stop the spinner once the DB reset is done
-    
-    if (err) {
-        console.error(`Error executing SQL script: ${err.message}`);
-        return;
+// Run the scripts in the correct order
+runScriptsInOrder();
+
+
+async function runScriptsInOrder() {
+    try {
+        // Run Python script to generate tickets
+        await runPythonScript();
+        stopSpinner();
+        console.log('\x1b[32m%s\x1b[0m', 'Tickets generated successfully.');
+
+        startSpinner();
+        // Reset the database
+        await resetDatabase();
+        stopSpinner();
+        console.log('\x1b[32m%s\x1b[0m', 'Database reset successfully.');
+
+        startSpinner();
+        // Hash passwords
+        await hashPasswords();
+
+        await sleep(3000);
+        stopSpinner();
+        console.log('\x1b[32m%s\x1b[0m', 'Passwords hashed successfully.');
+
+        console.log('\x1b[32m%s\x1b[0m', 'Exiting...');
+        await sleep(2000);
+        process.exit(0);
+    } catch (err) {
+        stopSpinner();
+        console.error(`Error: ${err.message}`);
     }
+}
 
-    console.log('\x1b[32m%s\x1b[0m', 'Database reset successfully.');  // Success message in green
-    
-    startSpinner();
-    await runJSFunctions();
-    await sleep(3000);
-    stopSpinner();
-    console.log('\x1b[32m%s\x1b[0m', 'Done running JavaScript.');
-    
-    startSpinner();
-    await sleep(2000);
-    stopSpinner();
-    
-    console.log('\x1b[32m%s\x1b[0m', 'Exiting...');
-    await sleep(2000);
-    process.exit(0);     // Then exit
-});
-
-async function runJSFunctions() {
-    console.log('Running JavaScript after resetting the database...');
-
-    // Stop the spinner temporarily for logging
-    stopSpinner(); 
-    await hashPasswords();
-
-    // Run Python script to generate tickets
-    await runPythonScript();
-    startSpinner();
-
+function resetDatabase() {
+    return new Promise((resolve, reject) => {
+        exec(mysqlCommand, (err, stdout, stderr) => {
+            if (err) {
+                reject(new Error(`Error executing SQL script: ${err.message}`));
+            } else {
+                resolve();
+            }
+        });
+    });
 }
 
 function runPythonScript() {
@@ -63,7 +71,7 @@ function runPythonScript() {
 
         // Capture output from Python script
         pythonProcess.stdout.on('data', (data) => {
-            console.log(`\x1b[32m%s\x1b[0m`, `Python script output: ${data}`);
+            console.log('\x1b[32m%s\x1b[0m', `Python script output: ${data}`);
         });
 
         pythonProcess.stderr.on('data', (data) => {
@@ -73,7 +81,7 @@ function runPythonScript() {
 
         pythonProcess.on('close', (code) => {
             if (code !== 0) {
-                reject(`Python script exited with code ${code}`);
+                reject(new Error(`Python script exited with code ${code}`));
             } else {
                 resolve();
             }
