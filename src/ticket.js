@@ -7,6 +7,7 @@
 const connection = require('./db.js');
 const multer = require('multer');
 const path = require('path');
+const { sendEmail } = require('./emailService');
 
 async function createTicket(title, description, category, email, userId, files) {
     return new Promise((resolve, reject) => {
@@ -275,6 +276,101 @@ async function getSortedTicketsWithClaim(sort, order) {
 }
 
 
+// Update ticket status and send notification
+async function updateTicketStatus(ticketId, status) {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE tickets SET status = ? WHERE id = ?';
+        connection.query(query, [status, ticketId], async (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                // Get the userId and userEmail associated with the ticket
+                const userQuery = 'SELECT user_id, email FROM tickets WHERE id = ?';
+                connection.query(userQuery, [ticketId], async (err, userResult) => {
+                    if (err) {
+                        reject(err);
+                    } else if (userResult.length === 0) {
+                        reject('No user found for this ticket');
+                    } else {
+                        const { user_id, email } = userResult[0];  // Get userId and userEmail
+
+                        // Email notification to the user
+                        const emailSubject = `Your ticket status has been updated`;
+                        const emailContent = `
+                            <p>Dear User,</p>
+                            <p>The status of your ticket has been updated to: <strong>${status}</strong>.</p>
+                            <p>Thank you for using our support service.</p>
+                            <p>Best regards,<br/>Ticketing Support Team</p>
+                        `;
+
+                        try {
+                            // Pass both userId and userEmail to the sendEmail function
+                            await sendEmail(email, emailSubject, emailContent, user_id);
+                            console.log('Email sent successfully');
+                        } catch (error) {
+                            console.error('Error sending email:', error);
+                        }
+
+                        resolve(result);
+                    }
+                });
+            }
+        });
+    });
+}
+
+
+async function getUserEmailByTicketId(ticketId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT email FROM tickets WHERE id = ?';
+        connection.query(query, [ticketId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else if (result.length === 0) {
+                resolve(null);
+            } else {
+                resolve(result[0].email);
+            }
+        });
+    });
+}
+
+
+// Function to close a ticket
+async function closeTicket(ticketId) {
+    const updateQuery = 'UPDATE tickets SET status = "closed" WHERE id = ?';
+
+    return new Promise((resolve, reject) => {
+        connection.query(updateQuery, [ticketId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+}
+
+// Function to fetch ticket details
+async function getTicketById(ticketId) {
+    const ticketQuery = 'SELECT * FROM tickets WHERE id = ?';
+
+    return new Promise((resolve, reject) => {
+        connection.query(ticketQuery, [ticketId], (err, results) => {
+            if (err) return reject(err);
+            resolve(results[0]);
+        });
+    });
+}
+
+// Function to send email notification
+async function notifyTicketClosure(ticket) {
+    const emailSubject = `Ticket #${ticket.id} Closed`;
+    const emailBody = `<p>Your ticket titled "${ticket.title}" has been closed.</p>`;
+
+    if (ticket.email) {
+        await sendEmail(ticket.email, emailSubject, emailBody);
+    } else {
+        console.error('No email associated with this ticket.');
+    }
+}
 
 module.exports = {
     createTicket,
@@ -291,5 +387,10 @@ module.exports = {
     countTicketsByStatus,
     countTicketsByUserAndStatus,
     claimTicket,
-    getSortedTicketsWithClaim
+    getSortedTicketsWithClaim,
+    updateTicketStatus,
+    getUserEmailByTicketId,
+    closeTicket,
+    getTicketById,
+    notifyTicketClosure
 };

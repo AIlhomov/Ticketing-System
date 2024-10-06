@@ -31,7 +31,9 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) UNIQUE,  
     password VARCHAR(255),         
-    google_id VARCHAR(255),        
+    google_id VARCHAR(255),
+    google_access_token VARCHAR(255),
+    google_refresh_token VARCHAR(255),        
     email VARCHAR(255) UNIQUE,     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     role ENUM('admin', 'user', 'agent') DEFAULT 'user'

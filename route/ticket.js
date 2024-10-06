@@ -90,13 +90,19 @@ router.post('/ticket/update-status/:id', async (req, res) => {
     const newStatus = req.body.status;
 
     try {
-        await ticketService.updateTicketStatus(ticketId, newStatus);
+        // Get the user email for the ticket
+        const userEmail = await ticketService.getUserEmailByTicketId(ticketId);
+
+        // Update the ticket status
+        await ticketService.updateTicketStatus(ticketId, newStatus, userEmail);
+
         res.redirect('/ticket/list');
-    } catch (err) {
-        console.error('Error updating ticket status:', err);
-        res.status(500).send('Error updating status');
+    } catch (error) {
+        console.error('Error updating ticket status:', error);
+        res.status(500).send('Error updating ticket status');
     }
 });
+
 
 // View a single ticket's details
 router.get('/ticket/view/:id', async (req, res) => {
@@ -122,15 +128,23 @@ router.get('/ticket/view/:id', async (req, res) => {
     }
 });
 
-// Close a single ticket
+// Route to close a ticket
 router.get('/ticket/close/:id', async (req, res) => {
     const ticketId = req.params.id;
 
     try {
-        await ticketService.updateTicketStatus(ticketId, 'closed');
+        // Close the ticket
+        await ticketService.closeTicket(ticketId);
+
+        // Fetch ticket details
+        const ticket = await ticketService.getTicketById(ticketId);
+
+        // Send email notification
+        await ticketService.notifyTicketClosure(ticket);
+
         res.redirect('/ticket/list');
-    } catch (err) {
-        console.error('Error closing ticket:', err);
+    } catch (error) {
+        console.error('Error closing ticket:', error);
         res.status(500).send('Error closing ticket');
     }
 });
