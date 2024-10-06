@@ -56,7 +56,7 @@ async function getTickets() {
     });
 }
 
-async function getSortedTickets(sort, order) {
+async function getSortedTickets(sort, order) { // Prob.
     return new Promise((resolve, reject) => {
         const validColumns = ['id', 'title', 'category', 'status'];
         const sortBy = validColumns.includes(sort) ? sort : 'id';
@@ -255,6 +255,25 @@ async function claimTicket(ticketId, userId) {
     });
 }
 
+// ------------------------------------------------------------
+async function getSortedTicketsWithClaim(sort, order) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT t.*, u.username AS claimed_by_username 
+            FROM tickets t 
+            LEFT JOIN users u ON t.claimed_by = u.id
+            ORDER BY ?? ${order};
+        `;
+        connection.query(query, [sort], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
 
 
 module.exports = {
@@ -271,5 +290,6 @@ module.exports = {
     getAttachmentsByTicketId,
     countTicketsByStatus,
     countTicketsByUserAndStatus,
-    claimTicket
+    claimTicket,
+    getSortedTicketsWithClaim
 };

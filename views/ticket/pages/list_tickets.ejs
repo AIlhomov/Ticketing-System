@@ -8,8 +8,9 @@
                 <th><a href="?sort=id&order=<%= sort === 'id' && order === 'asc' ? 'desc' : 'asc' %>">ID</a></th>
                 <th><a href="?sort=title&order=<%= sort === 'title' && order === 'asc' ? 'desc' : 'asc' %>">Title</a></th>
                 <th>Description</th>
-                <th><a href="?sort=category&order=<%= sort === 'category' && order === 'asc' ? 'desc' : 'asc' %>">category</a></th>
+                <th><a href="?sort=category&order=<%= sort === 'category' && order === 'asc' ? 'desc' : 'asc' %>">Category</a></th>
                 <th><a href="?sort=status&order=<%= sort === 'status' && order === 'asc' ? 'desc' : 'asc' %>">Status</a></th>
+                <th>Claimed By</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -29,13 +30,18 @@
                         </form>
                     </td>
                     <td>
+                        <% if (ticket.claimed_by_username) { %>
+                            <%= ticket.claimed_by_username %>
+                        <% } else { %>
+                            Not claimed
+                        <% } %>
+                    </td>
+                    <td>
                         <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info btn-sm action-btn">View</a>
                         <% if (ticket.status !== 'closed') { %>
                             <a href="/ticket/close/<%= ticket.id %>" class="btn btn-warning btn-sm action-btn">Close</a>
                         <% } %>
                     </td>
-                    
-                    
                 </tr>
             <% }) %>
         </tbody>

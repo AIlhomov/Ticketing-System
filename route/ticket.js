@@ -141,8 +141,8 @@ router.get('/ticket/list', isAdmin, async (req, res) => {
     const order = req.query.order === 'desc' ? 'desc' : 'asc';
 
     try {
-        const tickets = await ticketService.getSortedTickets(sort, order);
-        
+        const tickets = await ticketService.getSortedTicketsWithClaim(sort, order);
+
         res.render('ticket/pages/list_tickets', { 
             title: 'List of Tickets', 
             tickets, 
@@ -155,6 +155,7 @@ router.get('/ticket/list', isAdmin, async (req, res) => {
         res.status(500).send('Error retrieving tickets');
     }
 });
+
 
 // -----------------------------------------------
 // Registration route

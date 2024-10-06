@@ -11,7 +11,7 @@ const spinnerChars = ['|', '/', '-', '\\'];
 let spinnerIndex = 0;
 let spinnerInterval;
 
-const resetSQLPath = path.join(__dirname, '../sql/reset.sql');
+const resetSQLPath = path.join(__dirname, '../sql/resetPC.sql');
 const pythonScriptPath = path.join(__dirname, './generate_tickets.py');
 
 const mysqlCommand = `mysql -h ${process.env.DB_HOST} -u ${process.env.DB_USER} -p${process.env.DB_PASSWORD} ${process.env.DB_NAME} < ${resetSQLPath}`;
@@ -36,13 +36,14 @@ async function runScriptsInOrder() {
         stopSpinner();
         console.log('\x1b[32m%s\x1b[0m', 'Database reset successfully.');
 
-        startSpinner();
         // Hash passwords
         await hashPasswords();
+        startSpinner();
+        await sleep(5000);
+        
 
-        await sleep(3000);
+        console.log('\x1b[32m%s\x1b[0m', '\nPasswords hashed successfully.');
         stopSpinner();
-        console.log('\x1b[32m%s\x1b[0m', 'Passwords hashed successfully.');
 
         console.log('\x1b[32m%s\x1b[0m', 'Exiting...');
         await sleep(2000);
