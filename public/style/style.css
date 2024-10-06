@@ -484,3 +484,141 @@ table td.description-column {
 }
 
 
+/* Ticket Details Page -------------------------------------------------------------------------------------------------------------- */
+
+
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+}
+
+h1 {
+    color: #333333;
+    font-weight: bold;
+}
+
+.ticket-details p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #444444;
+}
+
+.ticket-details strong {
+    color: #555555;
+}
+
+.ticket-details {
+    padding: 15px;
+    border-left: 5px solid #007bff;
+    background-color: #f1f4f8;
+    border-radius: 4px;
+}
+
+.attachments p {
+    font-weight: bold;
+    color: #333333;
+}
+
+.ticket-image {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-image:hover {
+    transform: scale(1.05);
+}
+
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover, .close:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        margin-top: 30px;
+        padding: 15px;
+    }
+
+    .ticket-details p {
+        font-size: 1em;
+    }
+
+    .ticket-image {
+        max-width: 100%;
+    }
+
+    .modal-content {
+        max-width: 90%;
+    }
+
+    .close {
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+    }
+} 
+
+/* Customizing input fields */
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}

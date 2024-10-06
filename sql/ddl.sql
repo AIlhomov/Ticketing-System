@@ -29,12 +29,12 @@ CREATE TABLE attachments (
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) UNIQUE,  -- Username for regular login
-    password VARCHAR(255),         -- Hashed password for regular login
-    google_id VARCHAR(255),        -- Google ID for Google login
-    email VARCHAR(255) UNIQUE,     -- User email (from Google or registration)
+    username VARCHAR(255) UNIQUE,  
+    password VARCHAR(255),         
+    google_id VARCHAR(255),        
+    email VARCHAR(255) UNIQUE,     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    role ENUM('admin', 'user') DEFAULT 'user'
+    role ENUM('admin', 'user', 'agent') DEFAULT 'user'
 );
 
 
