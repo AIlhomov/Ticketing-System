@@ -9,10 +9,10 @@ const multer = require('multer');
 const path = require('path');
 const { sendEmail } = require('./emailService');
 
-async function createTicket(title, description, category, email, userId, files) {
+async function createTicket(title, description, category_id, email, userId, files) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO tickets (title, description, category, email, user_id, status) VALUES (?, ?, ?, ?, ?, ?)';
-        connection.query(query, [title, description, category, email, userId, 'open'], (err, result) => {
+        const query = 'INSERT INTO tickets (title, description, category_id, email, user_id, status) VALUES (?, ?, ?, ?, ?, ?)';
+        connection.query(query, [title, description, category_id, email, userId, 'open'], (err, result) => {
             if (err) {
                 reject(err);
                 return;
@@ -183,7 +183,11 @@ async function saveAttachment(attachmentData) {
 // Function to fetch all tickets (for admin)
 async function getAllTickets() {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM tickets';
+        const query = `
+            SELECT tickets.*, categories.name AS category_name 
+            FROM tickets 
+            LEFT JOIN categories ON tickets.category_id = categories.id
+        `;
         connection.query(query, (err, results) => {
             if (err) return reject(err);
             resolve(results);
@@ -259,12 +263,20 @@ async function claimTicket(ticketId, userId) {
 // ------------------------------------------------------------
 async function getSortedTicketsWithClaim(sort, order) {
     return new Promise((resolve, reject) => {
+        let validSortColumns = ['id', 'title', 'status', 'created_at', 'category_name', 'claimed_by_username']; // List of valid columns to sort by
+
+        if (!validSortColumns.includes(sort)) {
+            sort = 'id'; // Fallback to 'id' if the sort column is invalid
+        }
+
         const query = `
-            SELECT t.*, u.username AS claimed_by_username 
+            SELECT t.*, u.username AS claimed_by_username, c.name AS category_name 
             FROM tickets t 
             LEFT JOIN users u ON t.claimed_by = u.id
+            LEFT JOIN categories c ON t.category_id = c.id
             ORDER BY ?? ${order};
         `;
+
         connection.query(query, [sort], (err, results) => {
             if (err) {
                 reject(err);
@@ -274,6 +286,7 @@ async function getSortedTicketsWithClaim(sort, order) {
         });
     });
 }
+
 
 
 // Update ticket status and send notification

@@ -7,7 +7,6 @@ require('dotenv').config();
 // Function to send email using OAuth2 and Gmail for Google users, or regular SMTP for non-Google users
 async function sendEmail(to, subject, htmlContent, userId) {
     try {
-        // Get user's tokens from the database
         const query = 'SELECT google_access_token, google_refresh_token, email FROM users WHERE id = ?';
         const [user] = await new Promise((resolve, reject) => {
             connection.query(query, [userId], (err, results) => {
@@ -55,17 +54,17 @@ async function sendEmail(to, subject, htmlContent, userId) {
             // If no OAuth tokens, fallback to SMTP
             console.log('User does not have Google OAuth tokens, sending via regular SMTP');
             const transporter = nodemailer.createTransport({
-                host: 'smtp.gmail.com', // or your SMTP host
+                host: 'smtp.gmail.com',
                 port: 587,
-                secure: false, // use TLS
+                secure: false,
                 auth: {
-                    user: process.env.AUTH_MAIL_ADDRESS, // Your Gmail address or SMTP user
-                    pass: process.env.AUTH_PASSWORD_MAIL,  // Your Gmail App Password
+                    user: process.env.AUTH_MAIL_ADDRESS,
+                    pass: process.env.AUTH_PASSWORD_MAIL,
                 },
             });
 
             const mailOptions = {
-                from: process.env.AUTH_MAIL_ADDRESS, // Sender address
+                from: process.env.AUTH_MAIL_ADDRESS,
                 to: to,
                 subject: subject,
                 html: htmlContent

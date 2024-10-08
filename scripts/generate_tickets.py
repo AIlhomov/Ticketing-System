@@ -3,7 +3,7 @@ import random
 
 def generate_ticket_data(num_records=10):
     tickets = []
-    categories = ['Hardware', 'Software', 'Network', 'Security']
+    categories = ['1', '2', '3']
     status_options = ['open', 'closed']
     descriptions = ["Phone broken", "Can't connect to the internet", "Need help with software installation", "Need help with password reset", 
                    "Need help with email setup", "Need help with printer setup", "Need help with network setup", "Need help with security setup"]
@@ -18,7 +18,7 @@ def generate_ticket_data(num_records=10):
     
     return tickets
 
-headers = ["id", "title", "description", "category", "status"]
+headers = ["id", "title", "description", "category_id", "status"]
 ticket_data = generate_ticket_data(5)
 
 csv_file_path = "../sql/ticket.csv"

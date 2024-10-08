@@ -8,12 +8,13 @@ CREATE TABLE tickets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    category VARCHAR(100),
+    category_id INT,
     status VARCHAR(50) DEFAULT 'open',
     email VARCHAR(255),
     user_id INT,
     claimed_by INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
 CREATE TABLE attachments (
@@ -41,8 +42,7 @@ CREATE TABLE users (
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    name VARCHAR(255) UNIQUE
 );
 
 SHOW WARNINGS;

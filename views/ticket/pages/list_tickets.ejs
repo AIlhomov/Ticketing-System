@@ -20,7 +20,7 @@
                     <td><%= ticket.id %></td>
                     <td><%= ticket.title %></td>
                     <td><%= ticket.description %></td>
-                    <td><%= ticket.category %></td>
+                    <td><%= ticket.category_name %></td>
                     <td>
                         <form action="/ticket/update-status/<%= ticket.id %>" method="POST">
                             <select name="status" class="form-control" onchange="this.form.submit()">

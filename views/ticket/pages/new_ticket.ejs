@@ -15,13 +15,14 @@
 
         <div class="form-group">
             <label for="category">Category:</label>
-            <select class="form-control" id="category" name="category" required>
+            <select class="form-control" id="category_id" name="category_id" required>
                 <option value="" disabled selected>Select a category</option>
                 <% categories.forEach(category => { %>
-                    <option value="<%= category.name %>"><%= category.name %></option>
-                <% }) %>
+                    <option value="<%= category.id %>"><%= category.name %></option>
+                <% }); %>
             </select>
         </div>
+        
 
         <div class="form-group">
             <label for="file">Attach Files (Allowed formats: JPG, PNG, GIF, PDF. Max size: 1MB per file, 5MB total):</label>

@@ -367,7 +367,7 @@ router.post('/ticket/claim/:id', async (req, res) => {
 // Route to show category management page (for agents)
 router.get('/categories/manage', isAgent, async (req, res) => {
     try {
-        const categories = await ticketService.getAllCategories(); // Fetch categories
+        const categories = await ticketService.getAllCategories();
         res.render('ticket/pages/manage_categories', { categories, user: req.user });
     } catch (error) {
         console.error('Error fetching categories:', error);
