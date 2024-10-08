@@ -7,7 +7,7 @@ const userService = require('../src/userController.js');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const { isAdmin, isUser } = require('../middleware/role');
+const { isAdmin, isAgent, isUser } = require('../middleware/role');
 
 router.get('/', (req, res) => {
     if (req.user) {
@@ -30,13 +30,17 @@ router.get('/ticket/index', (req, res) => {
     res.render('ticket/pages/index', data);
 });
 
-router.get('/ticket/new', (req, res) => {
-    let data = {
-        title: 'New Ticket',
-        message: 'Create a new ticket',
-        user: req.user || null
-    };
-    res.render('ticket/pages/new_ticket', data);
+router.get('/ticket/new', async (req, res) => {
+    try {
+        const categories = await ticketService.getAllCategories(); // Fetch categories from the database
+        res.render('ticket/pages/new_ticket', {
+            categories: categories,
+            user: req.user
+        });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Error fetching categories');
+    }
 });
 
 // Create a new ticket
@@ -116,11 +120,16 @@ router.get('/ticket/view/:id', async (req, res) => {
             return res.status(404).send('Ticket not found');
         }
 
+        const ticketClaim = await ticketService.getTicketClaim(ticketId); // Get the "claimed by" agent
+
+        console.log(ticketClaim);
+
         res.render('ticket/pages/view_ticket', {
             user: req.user,
             ticket: ticket,
             attachments: attachments,
             role: req.user.role,
+            ticketClaim: ticketClaim
         });
     } catch (error) {
         console.error('Error retrieving ticket details:', error);
@@ -353,6 +362,40 @@ router.post('/ticket/claim/:id', async (req, res) => {
     }
 });
 
+// -----------------------------------------------
+
+// Route to show category management page (for agents)
+router.get('/categories/manage', isAgent, async (req, res) => {
+    try {
+        const categories = await ticketService.getAllCategories(); // Fetch categories
+        res.render('ticket/pages/manage_categories', { categories, user: req.user });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Error fetching categories');
+    }
+});
+
+router.post('/categories/create', isAgent, async (req, res) => {
+    const { name } = req.body;
+    try {
+        await ticketService.createCategory(name);
+        res.redirect('/categories/manage');
+    } catch (error) {
+        console.error('Error creating category:', error);
+        res.status(500).send('Error creating category');
+    }
+});
+
+router.post('/categories/delete/:id', isAgent, async (req, res) => {
+    const categoryId = req.params.id;
+    try {
+        await ticketService.deleteCategory(categoryId);
+        res.redirect('/categories/manage');
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).send('Error deleting category');
+    }
+});
 
 
 module.exports = router;

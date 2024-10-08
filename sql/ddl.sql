@@ -39,5 +39,10 @@ CREATE TABLE users (
     role ENUM('admin', 'user', 'agent') DEFAULT 'user'
 );
 
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 SHOW WARNINGS;

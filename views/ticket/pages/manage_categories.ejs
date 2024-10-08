@@ -1,0 +1,25 @@
+<%- include('../partials/header', { title: 'Manage Categories' }); %>
+<div class="container">
+    <h1>Manage Categories</h1>
+
+    <form action="/categories/create" method="POST">
+        <div class="form-group">
+            <label for="name">New Category Name:</label>
+            <input type="text" name="name" id="name" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Category</button>
+    </form>
+
+    <h2>Existing Categories</h2>
+    <ul>
+        <% categories.forEach(category => { %>
+            <li>
+                <%= category.name %> 
+                <form action="/categories/delete/<%= category.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</div>
+<%- include('../partials/footer'); %>

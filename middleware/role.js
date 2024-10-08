@@ -16,7 +16,16 @@ function isUser(req, res, next) {
     }
 }
 
+function isAgent(req, res, next) {
+    if (req.isAuthenticated() && req.user.role === 'agent' || req.user.role === 'admin') {
+        return next();
+    } else {
+        return res.status(403).send('Access denied');
+    }
+}
+
 module.exports = {
     isAdmin,
-    isUser
+    isUser,
+    isAgent
 };

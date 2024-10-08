@@ -372,6 +372,57 @@ async function notifyTicketClosure(ticket) {
     }
 }
 
+// Get all categories
+async function getAllCategories() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM categories';
+        connection.query(query, (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+}
+
+// Create a new category
+async function createCategory(name) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO categories (name) VALUES (?)';
+        connection.query(query, [name], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+}
+
+// Delete a category
+async function deleteCategory(id) {
+    return new Promise((resolve, reject) => {
+        const query = 'DELETE FROM categories WHERE id = ?';
+        connection.query(query, [id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+}
+
+async function getTicketClaim(ticketId) {
+    return new Promise((resolve, reject) => {
+        const query = ` SELECT t.*, u.username AS claimed_by_username 
+                        FROM tickets t 
+                        LEFT JOIN users u ON t.claimed_by = u.id
+                        WHERE t.id = ?;`;
+        connection.query(query, [ticketId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else if (result.length === 0) {
+                resolve(null);
+            } else {
+                resolve(result[0].claimed_by_username);
+            }
+        });
+    });
+}
+
 module.exports = {
     createTicket,
     getTickets,
@@ -392,5 +443,9 @@ module.exports = {
     getUserEmailByTicketId,
     closeTicket,
     getTicketById,
-    notifyTicketClosure
+    notifyTicketClosure,
+    getAllCategories,
+    createCategory,
+    deleteCategory,
+    getTicketClaim
 };

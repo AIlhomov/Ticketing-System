@@ -17,10 +17,9 @@
             <label for="category">Category:</label>
             <select class="form-control" id="category" name="category" required>
                 <option value="" disabled selected>Select a category</option>
-                <option value="network">Network Issues</option>
-                <option value="software">Software Problems</option>
-                <option value="hardware">Hardware Malfunctions</option>
-                <option value="other">Other</option>
+                <% categories.forEach(category => { %>
+                    <option value="<%= category.name %>"><%= category.name %></option>
+                <% }) %>
             </select>
         </div>
 
