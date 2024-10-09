@@ -19,7 +19,7 @@ async function createTicket(title, description, category_id, email, userId, file
             }
 
             const ticketId = result.insertId;
-
+            console.log(ticketId);
             if (files && files.length > 0) {
                 const attachmentQuery = 'INSERT INTO attachments (ticket_id, file_name, file_path, mime_type, size) VALUES ?';
                 const attachmentData = files.map(file => [ticketId, file.filename, file.path, file.mimetype, file.size]);

@@ -64,7 +64,9 @@ router.post('/ticket/new', (req, res) => {
             console.log('Form Data:', req.body);
 
             const userId = req.user ? req.user.id : null;
-            const { title, description, category, email } = req.body;
+            const { title, description, category_id, email } = req.body;
+
+            console.log('CATEGORRY:', category_id);
 
             let userEmail;
             if (req.user) {
@@ -75,7 +77,7 @@ router.post('/ticket/new', (req, res) => {
                     return res.status(400).send('Error: Email is required for anonymous ticket submissions.');
                 }
             }
-            const ticket = await ticketService.createTicket(title, description, category, userEmail, userId, req.files);
+            const ticket = await ticketService.createTicket(title, description, category_id, userEmail, userId, req.files);
 
             res.redirect('/ticket/success');
         } catch (error) {
