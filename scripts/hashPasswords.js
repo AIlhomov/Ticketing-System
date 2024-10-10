@@ -5,7 +5,8 @@ const connection = require('../src/db.js');
 async function hashPasswords() {
     const users = [
         { username: 'admin', password: 'admin' },
-        { username: 'user', password: 'user' }
+        { username: 'user', password: 'user' },
+        { username: 'agent', password: 'agent' }
     ];
 
     for (let user of users) {

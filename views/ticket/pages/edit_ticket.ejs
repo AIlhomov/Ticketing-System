@@ -1,0 +1,28 @@
+<%- include('../partials/header', { title: 'Edit Ticket' }); %>
+<div class="container">
+    <h1>Edit Ticket</h1>
+
+    <form action="/ticket/edit/<%= ticket.id %>" method="POST">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= ticket.title %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required><%= ticket.description %></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select class="form-control" id="category" name="category" required>
+                <% categories.forEach(category => { %>
+                    <option value="<%= category.id %>" <%= category.id === ticket.category_id ? 'selected' : '' %>><%= category.name %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Ticket</button>
+    </form>
+</div>
+<%- include('../partials/footer'); %>

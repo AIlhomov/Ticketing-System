@@ -1,3 +1,4 @@
 "id","username","password","google_id","email","role"
 "1","admin","admin",NULL,"admin@example.com","admin"
 "2","user","user",NULL,"user@example.com","user"
+"3","agent","agent","NULL","agent@example.com","agent"

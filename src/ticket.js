@@ -436,6 +436,43 @@ async function getTicketClaim(ticketId) {
     });
 }
 
+async function getTicketById(ticketId) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT t.*, c.name as category_name
+            FROM tickets t
+            LEFT JOIN categories c ON t.category_id = c.id
+            WHERE t.id = ?
+        `;
+        connection.query(query, [ticketId], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results[0]);
+            }
+        });
+    });
+}
+
+async function updateTicket(ticketId, updatedData) {
+    return new Promise((resolve, reject) => {
+        const { title, description, category } = updatedData;
+        const query = `
+            UPDATE tickets 
+            SET title = ?, description = ?, category_id = ? 
+            WHERE id = ?
+        `;
+        connection.query(query, [title, description, category, ticketId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+
 module.exports = {
     createTicket,
     getTickets,
@@ -460,5 +497,7 @@ module.exports = {
     getAllCategories,
     createCategory,
     deleteCategory,
-    getTicketClaim
+    getTicketClaim,
+    getTicketById,
+    updateTicket
 };

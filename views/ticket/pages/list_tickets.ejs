@@ -2,13 +2,13 @@
 <div class="page-container">
     <h1>Edit Tickets</h1>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered custom-table">
         <thead>
             <tr>
                 <th><a href="?sort=id&order=<%= sort === 'id' && order === 'asc' ? 'desc' : 'asc' %>">ID</a></th>
                 <th><a href="?sort=title&order=<%= sort === 'title' && order === 'asc' ? 'desc' : 'asc' %>">Title</a></th>
                 <th>Description</th>
-                <th><a href="?sort=category&order=<%= sort === 'category' && order === 'asc' ? 'desc' : 'asc' %>">Category</a></th>
+                <th><a href="?sort=category_name&order=<%= sort === 'category_name' && order === 'asc' ? 'desc' : 'asc' %>">Category</a></th>
                 <th><a href="?sort=status&order=<%= sort === 'status' && order === 'asc' ? 'desc' : 'asc' %>">Status</a></th>
                 <th>Claimed By</th>
                 <th>Actions</th>
@@ -22,8 +22,8 @@
                     <td><%= ticket.description %></td>
                     <td><%= ticket.category_name %></td>
                     <td>
-                        <form action="/ticket/update-status/<%= ticket.id %>" method="POST">
-                            <select name="status" class="form-control" onchange="this.form.submit()">
+                        <form action="/ticket/update-status/<%= ticket.id %>" method="POST" class="custom-form">
+                            <select name="status" class="custom-select" onchange="this.form.submit()">
                                 <option value="open" <%= ticket.status === 'open' ? 'selected' : '' %>>Open</option>
                                 <option value="closed" <%= ticket.status === 'closed' ? 'selected' : '' %>>Closed</option>
                             </select>
@@ -37,9 +37,12 @@
                         <% } %>
                     </td>
                     <td>
-                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info btn-sm action-btn">View</a>
+                        <a href="/ticket/view/<%= ticket.id %>" class="custom-btn btn-view">View</a>
                         <% if (ticket.status !== 'closed') { %>
-                            <a href="/ticket/close/<%= ticket.id %>" class="btn btn-warning btn-sm action-btn">Close</a>
+                            <a href="/ticket/close/<%= ticket.id %>" class="custom-btn btn-close">Close</a>
+                        <% } %>
+                        <% if (user && (user.role === 'admin' || user.role === 'agent')) { %>
+                            <a href="/ticket/edit/<%= ticket.id %>" class="custom-btn btn-edit">Edit</a>
                         <% } %>
                     </td>
                 </tr>

@@ -7,7 +7,7 @@ const userService = require('../src/userController.js');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const { isAdmin, isAgent, isUser } = require('../middleware/role');
+const { isAdmin, isAgent, isUser, isAgentOrAdmin } = require('../middleware/role');
 
 router.get('/', (req, res) => {
     if (req.user) {
@@ -125,6 +125,7 @@ router.get('/ticket/view/:id', async (req, res) => {
         const ticketClaim = await ticketService.getTicketClaim(ticketId); // Get the "claimed by" agent
 
         console.log(ticketClaim);
+        console.log("TICKET:: ", ticket)
 
         res.render('ticket/pages/view_ticket', {
             user: req.user,
@@ -161,7 +162,7 @@ router.get('/ticket/close/:id', async (req, res) => {
 });
 
 // Display a list of tickets
-router.get('/ticket/list', isAdmin, async (req, res) => {
+router.get('/ticket/list', isAgent, async (req, res) => {
     const sort = req.query.sort || 'id';
     const order = req.query.order === 'desc' ? 'desc' : 'asc';
 
@@ -180,6 +181,7 @@ router.get('/ticket/list', isAdmin, async (req, res) => {
         res.status(500).send('Error retrieving tickets');
     }
 });
+
 
 
 // -----------------------------------------------
@@ -213,7 +215,7 @@ router.post('/login', (req, res, next) => {
         req.logIn(user, (err) => {
             if (err) return next(err);
 
-            if (user.role === 'admin') {
+            if (user.role === 'admin' || user.role === 'agent') {
                 return res.redirect('/dashboard');
             } else if (user.role === 'user') {
                 return res.redirect('/dashboard');
@@ -282,7 +284,7 @@ router.get('/dashboard', async (req, res) => {
             in_progress: 0
         };
 
-        if (req.user.role === 'admin') {
+        if (req.user.role === 'admin' || req.user.role === 'agent') {
             tickets = await ticketService.getAllTickets();
         } else if (req.user.role === 'user') {
             tickets = await ticketService.getTicketsByUserId(req.user.id);
@@ -298,7 +300,7 @@ router.get('/dashboard', async (req, res) => {
             }
         });
 
-        if (req.user.role === 'admin') {
+        if (req.user.role === 'admin' || req.user.role === 'agent') {
             return res.render('ticket/pages/admin_dashboard', { 
                 user: req.user, 
                 title: 'Admin Dashboard', 
@@ -396,6 +398,42 @@ router.post('/categories/delete/:id', isAgent, async (req, res) => {
     } catch (error) {
         console.error('Error deleting category:', error);
         res.status(500).send('Error deleting category');
+    }
+});
+
+// -----------------------------------------------
+// Route to display the edit form
+router.get('/ticket/edit/:id', isAgentOrAdmin, async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+        // Fetch the ticket data and categories
+        const ticket = await ticketService.getTicketById(ticketId);
+        const categories = await ticketService.getAllCategories(); // Fetch categories
+
+        res.render('ticket/pages/edit_ticket', { 
+            ticket: ticket,
+            categories: categories,
+            user: req.user
+        });
+    } catch (error) {
+        console.error('Error fetching ticket:', error);
+        res.status(500).send('Error fetching ticket data');
+    }
+});
+
+// Route to handle the ticket edit form submission
+router.post('/ticket/edit/:id', isAgentOrAdmin, async (req, res) => {
+    const ticketId = req.params.id;
+    const { title, description, category } = req.body;
+
+    try {
+        // Update the ticket
+        await ticketService.updateTicket(ticketId, { title, description, category });
+        res.redirect('/ticket/list');
+    } catch (error) {
+        console.error('Error updating ticket:', error);
+        res.status(500).send('Error updating ticket');
     }
 });
 

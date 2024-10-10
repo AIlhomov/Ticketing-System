@@ -622,3 +622,84 @@ input[type="text"]:focus, textarea:focus {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
+/* Ensure table stays within its container */
+.page-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.custom-table {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    border-collapse: collapse; /* Prevents gaps between borders */
+}
+
+/* Custom buttons */
+.custom-btn {
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin: 2px;
+    font-size: 0.9rem;
+    display: inline-block;
+    min-width: 60px; /* Ensures the buttons maintain a minimum width */
+}
+
+/* View button styling */
+.custom-btn.btn-view {
+    background-color: #17a2b8;
+    color: white;
+    border: 1px solid #17a2b8;
+}
+
+/* Close button styling */
+.custom-btn.btn-close {
+    background-color: #ffc107;
+    color: white;
+    border: 1px solid #ffc107;
+}
+
+/* Edit button styling */
+.custom-btn.btn-edit {
+    background-color: #6c757d;
+    color: white;
+    border: 1px solid #6c757d;
+}
+
+/* Custom form select styling */
+.custom-select {
+    padding: 4px;
+    font-size: 0.85rem;
+    width: 100px;
+}
+
+/* Ensure table and buttons don't overflow */
+.table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.custom-table td, .custom-table th {
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px;
+    white-space: normal; /* Allow text to wrap */
+}
+
+/* For smaller screens, make the table responsive */
+@media (max-width: 768px) {
+    .custom-table {
+        font-size: 0.8rem;
+    }
+
+    .custom-btn {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    .custom-select {
+        width: 90px;
+    }
+}

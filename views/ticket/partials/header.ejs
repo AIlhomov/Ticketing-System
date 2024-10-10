@@ -31,7 +31,7 @@
                     <% if (user) { %> 
                         <li class="nav-item"><a class="nav-link" href="/ticket/new">Create New Ticket</a></li>
                     <% } %>
-                    <% if (user && user.role === 'admin') { %>
+                    <% if (user && (user.role === 'admin' || user.role === 'agent')) { %>
                         <li class="nav-item"><a class="nav-link" href="/ticket/list">Edit Tickets</a></li>
                         <li class="nav-item"><a class="nav-link" href="/categories/manage">Manage Categories</a></li>
                     <% } %>

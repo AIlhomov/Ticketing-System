@@ -24,8 +24,17 @@ function isAgent(req, res, next) {
     }
 }
 
+function isAgentOrAdmin(req, res, next) {
+    if (req.isAuthenticated() && (req.user.role === 'agent' || req.user.role === 'admin')) {
+        return next();
+    } else {
+        return res.status(403).send('Access denied');
+    }
+}
+
 module.exports = {
     isAdmin,
     isUser,
-    isAgent
+    isAgent,
+    isAgentOrAdmin
 };
