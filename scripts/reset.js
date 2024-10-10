@@ -11,7 +11,7 @@ const spinnerChars = ['|', '/', '-', '\\'];
 let spinnerIndex = 0;
 let spinnerInterval;
 
-const resetSQLPath = path.join(__dirname, '../sql/reset.sql');
+const resetSQLPath = path.join(__dirname, '../sql/resetPC.sql');
 const pythonScriptPath = path.join(__dirname, './generate_tickets.py');
 
 const mysqlCommand = `mysql -h ${process.env.DB_HOST} -u ${process.env.DB_USER} -p${process.env.DB_PASSWORD} ${process.env.DB_NAME} < ${resetSQLPath}`;

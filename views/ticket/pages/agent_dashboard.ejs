@@ -1,0 +1,24 @@
+<%- include('../partials/header', { title: 'Agent Dashboard' }); %>
+
+<div class="page-container">
+    <h1>Welcome to the Agent Dashboard, <%= user.username %>!</h1>
+
+    <div class="dashboard-stats">
+        <div class="stat-item">
+            <h3>Open Tickets</h3>
+            <p><%= ticketStats.open %> tickets are currently open.</p>
+        </div>
+        <div class="stat-item">
+            <h3>Closed Tickets</h3>
+            <p><%= ticketStats.closed %> tickets are closed.</p>
+        </div>
+        <div class="stat-item">
+            <h3>In Progress Tickets</h3>
+            <p><%= ticketStats.in_progress %> tickets are in progress.</p>
+        </div>
+    </div>
+
+    <a href="/ticket/list" class="btn btn-primary">View All Tickets</a>
+</div>
+
+<%- include('../partials/footer'); %>

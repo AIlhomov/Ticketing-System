@@ -187,14 +187,14 @@ router.get('/ticket/list', isAgent, async (req, res) => {
 // -----------------------------------------------
 // Registration route
 router.post('/register', async (req, res) => {
-    const { username, password, email, role } = req.body;
+    const { username, email, password } = req.body;
 
     try {
-        await userService.createUser(username, password, email, role);
+        await userService.createUser(username, email, password);
         res.redirect('/login');
     } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).send('Error creating user');
+        console.error('Error during registration:', error);
+        res.status(500).send(error);
     }
 });
 
@@ -258,7 +258,7 @@ router.post('/register', async (req, res) => {
             return res.status(500).send('Server error');
         }
 
-        const query = 'INSERT INTO users (username, password, email) VALUES (?, ?, ?)';
+        const query = 'INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, "user")';
         connection.query(query, [username, hash, email], (err, result) => {
             if (err) {
                 console.error(err);
@@ -284,12 +284,14 @@ router.get('/dashboard', async (req, res) => {
             in_progress: 0
         };
 
-        if (req.user.role === 'admin' || req.user.role === 'agent') {
+        if (req.user.role === 'admin') {
             tickets = await ticketService.getAllTickets();
+        } else if (req.user.role === 'agent') {
+            tickets = await ticketService.getAllTickets(); // Agents can view all tickets as well
         } else if (req.user.role === 'user') {
             tickets = await ticketService.getTicketsByUserId(req.user.id);
         }
-
+        console.log("HERE ARE DASHBOARD TICKETS: ", req.user);
         tickets.forEach(ticket => {
             if (ticket.status === 'open' || ticket.status === 'open\r') {
                 ticketStats.open++;
@@ -300,10 +302,19 @@ router.get('/dashboard', async (req, res) => {
             }
         });
 
-        if (req.user.role === 'admin' || req.user.role === 'agent') {
+        if (req.user.role === 'admin') {
             return res.render('ticket/pages/admin_dashboard', { 
                 user: req.user, 
                 title: 'Admin Dashboard', 
+                ticketStats, 
+                tickets 
+            });
+        }
+
+        if (req.user.role === 'agent') {
+            return res.render('ticket/pages/agent_dashboard', { 
+                user: req.user, 
+                title: 'Agent Dashboard', 
                 ticketStats, 
                 tickets 
             });
@@ -320,6 +331,7 @@ router.get('/dashboard', async (req, res) => {
         return res.status(500).send('Error retrieving tickets');
     }
 });
+
 
 
 // Route for viewing the user's tickets

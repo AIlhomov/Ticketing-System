@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const connection = require('./db');
 
-async function createUser(username, password, email, role) {
+async function createUser(username, email, password) {
     return new Promise((resolve, reject) => {
         const saltRounds = 10;
         bcrypt.hash(password, saltRounds, (err, hash) => {
@@ -9,8 +9,8 @@ async function createUser(username, password, email, role) {
                 reject(err);
             }
 
-            const query = 'INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)';
-            connection.query(query, [username, hash, email, role], (err, result) => {
+            const query = 'INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, "user")';
+            connection.query(query, [username, hash, email], (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
