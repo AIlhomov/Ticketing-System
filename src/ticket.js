@@ -472,6 +472,33 @@ async function updateTicket(ticketId, updatedData) {
     });
 }
 
+async function getSortedTicketsByUser(userId, sort, order) {
+    return new Promise((resolve, reject) => {
+        let validSortColumns = ['id', 'title', 'status', 'created_at', 'category_name', 'claimed_by_username']; // List of valid columns to sort by
+
+        if (!validSortColumns.includes(sort)) {
+            sort = 'id'; // Fallback to 'id' if the sort column is invalid
+        }
+
+        const query = `
+            SELECT t.*, u.username AS claimed_by_username, c.name AS category_name 
+            FROM tickets t 
+            LEFT JOIN users u ON t.claimed_by = u.id
+            LEFT JOIN categories c ON t.category_id = c.id
+            WHERE t.user_id = ?  -- Ensure only the logged-in user's tickets are fetched
+            ORDER BY ?? ${order};
+        `;
+
+        connection.query(query, [userId, sort], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
 
 module.exports = {
     createTicket,
@@ -499,5 +526,6 @@ module.exports = {
     deleteCategory,
     getTicketClaim,
     getTicketById,
-    updateTicket
+    updateTicket,
+    getSortedTicketsByUser
 };

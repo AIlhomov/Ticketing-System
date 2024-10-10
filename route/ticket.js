@@ -334,18 +334,24 @@ router.get('/dashboard', async (req, res) => {
 
 
 
-// Route for viewing the user's tickets
+// Route for viewing and sorting the user's tickets
 router.get('/dashboard/tickets', async (req, res) => {
     if (!req.user) {
         return res.redirect('/login');
     }
 
+    const sort = req.query.sort || 'id';
+    const order = req.query.order === 'desc' ? 'desc' : 'asc';
+
     try {
-        const tickets = await ticketService.getTicketsByUserId(req.user.id);
+        const tickets = await ticketService.getSortedTicketsByUser(req.user.id, sort, order); // New service function
+
         return res.render('ticket/pages/user_ticket_list', {
             user: req.user,
             title: 'My Tickets',
-            tickets
+            tickets,
+            sort,
+            order
         });
     } catch (error) {
         console.error('Error retrieving tickets:', error);

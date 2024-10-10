@@ -6,14 +6,30 @@
     <% if (tickets.length === 0) { %>
         <p>You haven't created any tickets yet.</p>
     <% } else { %>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Title</th>
+                    <th>
+                        <a href="?sort=id&order=<%= sort === 'id' && order === 'asc' ? 'desc' : 'asc' %>">
+                            ID <%= sort === 'id' ? (order === 'asc' ? '↑' : '↓') : '' %>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="?sort=title&order=<%= sort === 'title' && order === 'asc' ? 'desc' : 'asc' %>">
+                            Title <%= sort === 'title' ? (order === 'asc' ? '↑' : '↓') : '' %>
+                        </a>
+                    </th>
                     <th>Description</th>
-                    <th>Category</th>
-                    <th>Status</th>
+                    <th>
+                        <a href="?sort=category_name&order=<%= sort === 'category_name' && order === 'asc' ? 'desc' : 'asc' %>">
+                            Category <%= sort === 'category_name' ? (order === 'asc' ? '↑' : '↓') : '' %>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="?sort=status&order=<%= sort === 'status' && order === 'asc' ? 'desc' : 'asc' %>">
+                            Status <%= sort === 'status' ? (order === 'asc' ? '↑' : '↓') : '' %>
+                        </a>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,10 +39,10 @@
                     <td><%= ticket.id %></td>
                     <td><%= ticket.title %></td>
                     <td class="description-column"><%= ticket.description %></td>
-                    <td><%= ticket.category %></td>
+                    <td><%= ticket.category_name %></td>
                     <td><%= ticket.status %></td>
                     <td>
-                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info">View</a>
+                        <a href="/ticket/view/<%= ticket.id %>" class="btn btn-info btn-sm">View</a>
                     </td>
                 </tr>
                 <% }); %>
