@@ -35,6 +35,11 @@
                         <li class="nav-item"><a class="nav-link" href="/ticket/list">Edit Tickets</a></li>
                         <li class="nav-item"><a class="nav-link" href="/categories/manage">Manage Categories</a></li>
                     <% } %>
+                    <% if (user && user.role === 'admin') { %>
+                        <!-- Admin-specific links -->
+                        <li class="nav-item"><a class="nav-link" href="/users/create">Create New User</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/users/manage">Manage Users</a></li>
+                    <% } %>
                     <% if (user) { %>
                         <li class="nav-item"><a class="nav-link" href="/dashboard">Welcome, <%= user.username || user.email %></a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>

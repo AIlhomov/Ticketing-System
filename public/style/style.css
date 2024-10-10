@@ -703,3 +703,25 @@ input[type="text"]:focus, textarea:focus {
         width: 90px;
     }
 }
+
+.btn-user-action {
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin: 2px;
+    font-size: 0.9rem;
+    display: inline-block;
+    min-width: 60px;
+}
+
+.btn-delete {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #ff1a1a;
+}

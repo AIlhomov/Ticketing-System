@@ -11,7 +11,8 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const middleware = require('./middleware/index.js');
-const routeTicket = require('./route/ticket.js');
+const routeTicket = require('./route/ticket.js'); // Route for ticket handling
+const userRoutes = require('./route/users.js');   // Route for user handling
 const flash = require('connect-flash');
 
 const session = require('express-session');
@@ -46,9 +47,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(middleware.logIncomingToConsole);
 
-app.use("/", routeTicket);
-app.use("/ticket", routeTicket);
-app.use('/uploads', express.static('uploads'));
+// Routes
+app.use("/", routeTicket);             // Default route for ticketing system
+app.use("/ticket", routeTicket);        // Ticket route for specific ticket management
+app.use('/uploads', express.static('uploads')); // For serving uploaded files
+
+app.use("/users", userRoutes);          // Route for user creation and management
 
 
 

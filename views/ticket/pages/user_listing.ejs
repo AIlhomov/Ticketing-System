@@ -1,0 +1,34 @@
+<%- include('../partials/header', { title: 'Manage Users' }); %>
+
+<div class="container">
+    <h1>Manage Users</h1>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.id %></td>
+                    <td><%= user.username %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.role %></td>
+                    <td>
+                        <!-- Admin options to delete/edit users -->
+                        <a href="/users/edit/<%= user.id %>" class="btn btn-warning btn-user-action">Edit</a>
+                        <a href="/users/delete/<%= user.id %>" class="btn btn-delete btn-user-action">Delete</a>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../partials/footer'); %>
