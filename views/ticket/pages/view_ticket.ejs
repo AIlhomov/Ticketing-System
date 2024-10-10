@@ -43,7 +43,7 @@
     <% } %>
 
     <div class="mt-4">
-        <% if (user.role === 'admin') { %>
+        <% if (user.role === 'admin' || user.role === 'agent') { %>
             <% if (!ticket.claimed_by) { %>
                 <form action="/ticket/claim/<%= ticket.id %>" method="POST">
                     <button type="submit" class="btn btn-primary">Claim Ticket</button>

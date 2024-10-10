@@ -1,11 +1,13 @@
 --
 -- Insert some data into the database. Using CSV files to insert data.
 --
+use ticket;
 
-DELETE FROM attachments; -- Clear the attachments table.
-DELETE FROM tickets;
 DELETE FROM users;
-DELETE FROM categories; 
+DELETE FROM attachments;
+DELETE FROM tickets;
+DELETE FROM categories;
+
 --
 -- Enable LOAD DATA LOCAL INFILE on the server.
 --
@@ -16,7 +18,7 @@ LOAD DATA LOCAL INFILE 'categories.csv'
 INTO TABLE categories
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\r\n'
+LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 (id, name);
 

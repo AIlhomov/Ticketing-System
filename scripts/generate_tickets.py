@@ -3,7 +3,7 @@ import random
 
 def generate_ticket_data(num_records=10):
     tickets = []
-    categories = ['1', '2', '3']
+    categories = ['1', '2', '3', '4']
     status_options = ['open', 'closed']
     descriptions = ["Phone broken", "Can't connect to the internet", "Need help with software installation", "Need help with password reset", 
                    "Need help with email setup", "Need help with printer setup", "Need help with network setup", "Need help with security setup"]

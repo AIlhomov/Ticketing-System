@@ -363,7 +363,7 @@ router.get('/ticket/success', (req, res) => {
 
 // Route to claim a ticket
 router.post('/ticket/claim/:id', async (req, res) => {
-    if (!req.user || req.user.role !== 'admin') {
+    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'agent')) {
         return res.status(403).send('Unauthorized');
     }
 

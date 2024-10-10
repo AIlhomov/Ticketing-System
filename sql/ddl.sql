@@ -3,6 +3,12 @@ use ticket;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS tickets;
+DROP TABLE IF EXISTS categories;
+
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE
+);
 
 CREATE TABLE tickets (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -38,11 +44,6 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE,     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     role ENUM('admin', 'user', 'agent') DEFAULT 'user'
-);
-
-CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) UNIQUE
 );
 
 SHOW WARNINGS;
