@@ -499,6 +499,23 @@ async function getSortedTicketsByUser(userId, sort, order) {
     });
 }
 
+// Fetch tickets by category ID
+async function getTicketsByCategoryId(categoryId) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT * FROM tickets WHERE category_id = ?;
+        `;
+        connection.query(query, [categoryId], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+
 
 module.exports = {
     createTicket,
@@ -527,5 +544,6 @@ module.exports = {
     getTicketClaim,
     getTicketById,
     updateTicket,
-    getSortedTicketsByUser
+    getSortedTicketsByUser,
+    getTicketsByCategoryId
 };

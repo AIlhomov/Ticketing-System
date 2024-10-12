@@ -1,25 +1,82 @@
 <%- include('../partials/header', { title: 'Manage Categories' }); %>
-<div class="container">
-    <h1>Manage Categories</h1>
+
+<div class="category-container">
+    <h1 class="category-title">Manage Categories</h1>
 
     <form action="/categories/create" method="POST">
-        <div class="form-group">
-            <label for="name">New Category Name:</label>
-            <input type="text" name="name" id="name" class="form-control" required>
+        <div class="category-input-group">
+            <label for="categoryName">New Category Name:</label>
+            <input type="text" id="categoryName" name="name" class="category-input" required>
         </div>
-        <button type="submit" class="btn btn-primary">Create Category</button>
+        <button type="submit" class="category-create-btn">Create Category</button>
     </form>
 
-    <h2>Existing Categories</h2>
-    <ul>
+    <hr class="category-divider">
+
+    <h3 class="existing-category-title">Existing Categories</h3>
+    <ul class="category-list">
         <% categories.forEach(category => { %>
-            <li>
-                <%= category.name %> 
-                <form action="/categories/delete/<%= category.id %>" method="POST" style="display:inline;">
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
+            <li class="category-list-item">
+                <span><%= category.name %></span>
+                <button class="category-delete-btn" data-category-id="<%= category.id %>" data-category-name="<%= category.name %>">DELETE</button>
             </li>
-        <% }) %>
+        <% }); %>
     </ul>
 </div>
+
+<!-- Modal for delete confirmation -->
+<div class="category-modal" id="deleteModal">
+    <div class="category-modal-content">
+        <div class="category-modal-header">
+            <h5 class="category-modal-title">Delete Category</h5>
+            <span class="category-modal-close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="category-modal-body">
+            <p>Are you sure you want to delete the category "<span id="categoryToDelete"></span>"? This action cannot be undone.</p>
+            <p>This will affect the following tickets:</p>
+            <ul id="affectedTicketsList" class="category-modal-ticket-list"></ul>
+        </div>
+        <div class="category-modal-footer">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <form id="deleteCategoryForm" action="/categories/delete" method="POST">
+                <input type="hidden" name="categoryId" id="categoryIdToDelete">
+                <button type="submit" class="btn-modal-delete">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.category-delete-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const categoryId = this.getAttribute('data-category-id');
+            const categoryName = this.getAttribute('data-category-name');
+            
+            // Update modal information
+            document.getElementById('categoryToDelete').textContent = categoryName;
+            document.getElementById('categoryIdToDelete').value = categoryId;
+
+            // Fetch affected tickets from the server
+            const response = await fetch(`/categories/tickets/${categoryId}`);
+            const tickets = await response.json();
+
+            // Populate the modal with affected tickets
+            const ticketList = document.getElementById('affectedTicketsList');
+            ticketList.innerHTML = '';
+            tickets.forEach(ticket => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Ticket #${ticket.id} - ${ticket.title}`;
+                ticketList.appendChild(listItem);
+            });
+
+            // Show the modal
+            document.getElementById('deleteModal').style.display = 'block';
+        });
+    });
+
+    function closeModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+</script>
+
 <%- include('../partials/footer'); %>

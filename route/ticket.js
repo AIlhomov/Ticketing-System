@@ -397,6 +397,7 @@ router.get('/categories/manage', isAgent, async (req, res) => {
     }
 });
 
+// Route to create a new category (for agents)
 router.post('/categories/create', isAgent, async (req, res) => {
     const { name } = req.body;
     try {
@@ -408,8 +409,21 @@ router.post('/categories/create', isAgent, async (req, res) => {
     }
 });
 
-router.post('/categories/delete/:id', isAgent, async (req, res) => {
-    const categoryId = req.params.id;
+// Fetch tickets associated with a category (for confirmation modal)
+router.get('/categories/tickets/:categoryId', isAgent, async (req, res) => {
+    const categoryId = req.params.categoryId;
+    try {
+        const tickets = await ticketService.getTicketsByCategoryId(categoryId);
+        res.json(tickets); // Send tickets as JSON
+    } catch (error) {
+        console.error('Error fetching tickets by category:', error);
+        res.status(500).send('Error fetching tickets');
+    }
+});
+
+// Route to delete a category (for agents)
+router.post('/categories/delete', isAgent, async (req, res) => {
+    const categoryId = req.body.categoryId;
     try {
         await ticketService.deleteCategory(categoryId);
         res.redirect('/categories/manage');
