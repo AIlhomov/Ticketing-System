@@ -25,28 +25,38 @@
             <nav class="col-md-2 navbar navbar-dark bg-dark flex-column vh-100">
                 <a class="navbar-brand" href="/">Ticketing System</a>
                 <ul class="navbar-nav">
+                    
                     <% if (!user) { %>
                         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <% } %>
+                    <% if (user) { %>
+                        <li class="nav-item"><a class="nav-link" href="/dashboard">Welcome, <%= user.username || user.email %></a></li>
+                    <% } else { %>
+                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                    <% } %>
                     <% if (user) { %> 
                         <li class="nav-item"><a class="nav-link" href="/ticket/new">Create New Ticket</a></li>
-                    <% } %>
-                    <% if (user && (user.role === 'admin' || user.role === 'agent')) { %>
-                        <li class="nav-item"><a class="nav-link" href="/ticket/list">Edit Tickets</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/categories/manage">Manage Categories</a></li>
+                        <% if (user && (user.role === 'admin' || user.role === 'agent')) { %>
+                            <li class="nav-item"><a class="nav-link" href="/ticket/list">Edit Tickets</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/categories/manage">Manage Categories</a></li>
+                        <% } %>
+                        <li class="nav-item"><a class="nav-link" href="/knowledge_base/articles">Knowledge Base</a></li>
+                        <% if (user.role === 'agent' || user.role === 'admin') { %>
+                            <li class="nav-item"><a class="nav-link" href="/knowledge_base/articles/new">Create New Article</a></li>
+                        <% } %>
                     <% } %>
                     <% if (user && user.role === 'admin') { %>
                         <!-- Admin-specific links -->
                         <li class="nav-item"><a class="nav-link" href="/users/create">Create New User</a></li>
                         <li class="nav-item"><a class="nav-link" href="/users/manage">Manage Users</a></li>
                     <% } %>
+                    
                     <% if (user) { %>
-                        <li class="nav-item"><a class="nav-link" href="/dashboard">Welcome, <%= user.username || user.email %></a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-                    <% } else { %>
-                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
                     <% } %>
+
+
                 </ul>
             </nav>
 

@@ -1,0 +1,16 @@
+<%- include('../partials/header', { title: article.title }); %>
+
+<div class="container article-container">
+    <h1 class="text-center my-4"><%= article.title %></h1>
+
+    <!-- Ensure the content doesn't overflow -->
+    <div class="article-content">
+        <p><%= article.content %></p>
+    </div>
+
+    <p>Created on: <%= new Date(article.created_at).toString() %></p>
+
+    <a href="/knowledge_base/articles" class="btn btn-secondary mt-4">Back to Knowledge Base</a>
+</div>
+
+<%- include('../partials/footer'); %>

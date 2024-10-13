@@ -1,0 +1,4 @@
+"id","title","content","category","created_by","created_at"
+"1","How to reset your password","To reset your password, click on 'Forgot Password' at the login page, and follow the instructions sent to your email.","Login Issues","3","2024-10-12"
+"2","Troubleshooting network issues","If you're having network issues, first check if your router is powered on. Try restarting it. If the issue persists, contact support.","Network Problems","3","2024-10-12"
+"3","Installing software on Ubuntu","To install software on Ubuntu, you can use the apt package manager. Run 'sudo apt update' followed by 'sudo apt install <package_name>'.","Software Installation","3","2024-10-12"

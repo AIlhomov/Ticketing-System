@@ -52,15 +52,12 @@
             const categoryId = this.getAttribute('data-category-id');
             const categoryName = this.getAttribute('data-category-name');
             
-            // Update modal information
             document.getElementById('categoryToDelete').textContent = categoryName;
             document.getElementById('categoryIdToDelete').value = categoryId;
 
-            // Fetch affected tickets from the server
             const response = await fetch(`/categories/tickets/${categoryId}`);
             const tickets = await response.json();
 
-            // Populate the modal with affected tickets
             const ticketList = document.getElementById('affectedTicketsList');
             ticketList.innerHTML = '';
             tickets.forEach(ticket => {
@@ -69,7 +66,6 @@
                 ticketList.appendChild(listItem);
             });
 
-            // Show the modal
             document.getElementById('deleteModal').style.display = 'block';
         });
     });

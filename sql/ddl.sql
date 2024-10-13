@@ -1,5 +1,6 @@
 use ticket;
 
+DROP TABLE IF EXISTS knowledge_base;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS tickets;
@@ -34,6 +35,7 @@ CREATE TABLE attachments (
     FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) UNIQUE,  
@@ -45,5 +47,17 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     role ENUM('admin', 'user', 'agent') DEFAULT 'user'
 );
+
+CREATE TABLE knowledge_base (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    created_by INT NOT NULL,  -- Link to users table
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
 
 SHOW WARNINGS;

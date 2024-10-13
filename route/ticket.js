@@ -441,7 +441,7 @@ router.get('/ticket/edit/:id', isAgentOrAdmin, async (req, res) => {
     try {
         // Fetch the ticket data and categories
         const ticket = await ticketService.getTicketById(ticketId);
-        const categories = await ticketService.getAllCategories(); // Fetch categories
+        const categories = await ticketService.getAllCategories();
 
         res.render('ticket/pages/edit_ticket', { 
             ticket: ticket,
@@ -460,7 +460,6 @@ router.post('/ticket/edit/:id', isAgentOrAdmin, async (req, res) => {
     const { title, description, category } = req.body;
 
     try {
-        // Update the ticket
         await ticketService.updateTicket(ticketId, { title, description, category });
         res.redirect('/ticket/list');
     } catch (error) {

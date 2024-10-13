@@ -13,6 +13,7 @@ const app = express();
 const middleware = require('./middleware/index.js');
 const routeTicket = require('./route/ticket.js'); // Route for ticket handling
 const userRoutes = require('./route/users.js');   // Route for user handling
+const knowledgeBaseRoutes = require('./route/knowledge_base.js'); // Route for knowledge base handling
 const flash = require('connect-flash');
 
 const session = require('express-session');
@@ -53,7 +54,7 @@ app.use("/ticket", routeTicket);        // Ticket route for specific ticket mana
 app.use('/uploads', express.static('uploads')); // For serving uploaded files
 
 app.use("/users", userRoutes);          // Route for user creation and management
-
+app.use("/knowledge_base", knowledgeBaseRoutes); // Route for knowledge base
 
 
 app.listen(port, logStartUpDetailsToConsole);

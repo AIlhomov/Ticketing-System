@@ -3,6 +3,7 @@
 --
 use ticket;
 
+DELETE FROM knowledge_base; -- Clear the knowledge_base table.
 DELETE FROM users;
 DELETE FROM attachments;
 DELETE FROM tickets;
@@ -39,3 +40,10 @@ IGNORE 1 ROWS
 (id, username, password, google_id, email, role)
 SET google_id = NULLIF(google_id, 'NULL');
 
+LOAD DATA LOCAL INFILE 'knowledge_base.csv'
+INTO TABLE knowledge_base
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(id, title, content, category, created_by, created_at);

@@ -9,7 +9,7 @@ function isAdmin(req, res, next) {
 }
 
 function isUser(req, res, next) {
-    if (req.isAuthenticated() && req.user.role === 'user') {
+    if (req.isAuthenticated() && req.user.role === 'user' || req.user.role === 'admin' || req.user.role === 'agent') {
         return next();
     } else {
         return res.status(403).send('Access denied');

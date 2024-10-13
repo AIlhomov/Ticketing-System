@@ -879,3 +879,34 @@ input[type="text"]:focus, textarea:focus {
 .btn-modal-delete:hover {
     background-color: #c82333;
 }
+
+/* Style for the knowledge base article list */
+.knowledge-base ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.knowledge-base ul li {
+    margin-bottom: 20px;
+}
+
+.knowledge-base ul li h3 {
+    margin-bottom: 10px;
+}
+
+.knowledge-base ul li p {
+    margin-bottom: 5px;
+}
+
+/* Ensure the article content does not overflow */
+.article-container {
+    max-width: 800px; /* You can adjust this width */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    word-wrap: break-word; /* Ensure long text breaks into the next line */
+}
+
+.article-content p {
+    white-space: pre-wrap; /* Preserve formatting of new lines */
+    overflow-wrap: break-word; /* Handle long words or strings */
+}
