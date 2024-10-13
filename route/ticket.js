@@ -504,10 +504,8 @@ router.post('/forgot-password', async (req, res) => {
         // Generate a reset token
         const token = crypto.randomBytes(20).toString('hex');
         
-        // Set token and expiration in user record
         await userService.setResetPasswordToken(user.id, token);
 
-        // Use emailService to send the reset email
         await emailService.sendPasswordResetEmail(email, token);
 
         req.flash('message', 'An e-mail has been sent to ' + email + ' with further instructions.');
@@ -531,10 +529,8 @@ router.post('/reset-password/:token', async (req, res) => {
             return res.redirect('/forgot-password');
         }
 
-        // Hash the new password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Update the user's password and clear the reset token and expiration
         await userService.updatePassword(user.id, hashedPassword);
 
         req.flash('message', 'Your password has been reset successfully. You can now log in.');
