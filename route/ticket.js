@@ -7,6 +7,8 @@ const userService = require('../src/userController.js');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const emailService = require('../src/emailService.js');
+const crypto = require('crypto');
 const { isAdmin, isAgent, isUser, isAgentOrAdmin } = require('../middleware/role');
 
 router.get('/', (req, res) => {
@@ -465,6 +467,81 @@ router.post('/ticket/edit/:id', isAgentOrAdmin, async (req, res) => {
     } catch (error) {
         console.error('Error updating ticket:', error);
         res.status(500).send('Error updating ticket');
+    }
+});
+
+// Password - Reset
+
+// Route to display the forgot password form
+router.get('/forgot-password', (req, res) => {
+    res.render('ticket/pages/forgot_password');
+});
+
+
+// Route for displaying the reset password form
+router.get('/reset-password/:token', async (req, res) => {
+    const user = await userService.findUserByResetToken(req.params.token);
+
+    if (!user || user.reset_password_expires < Date.now()) {
+        req.flash('error', 'Password reset token is invalid or has expired.');
+        return res.redirect('/forgot-password');
+    }
+
+    res.render('ticket/pages/reset_password', { token: req.params.token });
+});
+
+// Route for handling forgot password submissions
+router.post('/forgot-password', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await userService.findUserByEmail(email);
+        if (!user) {
+            req.flash('error', 'No account with that email address exists.');
+            return res.redirect('/forgot-password');
+        }
+
+        // Generate a reset token
+        const token = crypto.randomBytes(20).toString('hex');
+        
+        // Set token and expiration in user record
+        await userService.setResetPasswordToken(user.id, token);
+
+        // Use emailService to send the reset email
+        await emailService.sendPasswordResetEmail(email, token);
+
+        req.flash('message', 'An e-mail has been sent to ' + email + ' with further instructions.');
+        res.redirect('/login');
+
+    } catch (error) {
+        console.error('Error handling forgot password:', error);
+        res.status(500).send('Error handling forgot password.');
+    }
+});
+
+// Route to handle resetting the password
+router.post('/reset-password/:token', async (req, res) => {
+    const { password } = req.body;
+    const token = req.params.token;
+
+    try {
+        const user = await userService.findUserByResetToken(token);
+        if (!user || user.reset_password_expires < Date.now()) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('/forgot-password');
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Update the user's password and clear the reset token and expiration
+        await userService.updatePassword(user.id, hashedPassword);
+
+        req.flash('message', 'Your password has been reset successfully. You can now log in.');
+        res.redirect('/login');
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).send('Error resetting password.');
     }
 });
 

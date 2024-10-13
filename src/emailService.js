@@ -79,6 +79,45 @@ async function sendEmail(to, subject, htmlContent, userId) {
     }
 }
 
+// Function to send password reset email
+async function sendPasswordResetEmail(to, token) {
+    const resetLink = `http://${process.env.HOST}/reset-password/${token}`;
+    const subject = 'Password Reset Request';
+    const htmlContent = `
+        <h1>Password Reset</h1>
+        <p>You requested a password reset for your account. Click the link below to reset your password:</p>
+        <a href="${resetLink}">Reset Password</a>
+        <p>If you did not request this, please ignore this email.</p>
+    `;
+
+    try {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.AUTH_MAIL_ADDRESS,
+                pass: process.env.AUTH_PASSWORD_MAIL,
+            },
+        });
+
+        const mailOptions = {
+            from: process.env.AUTH_MAIL_ADDRESS,
+            to: to,
+            subject: subject,
+            html: htmlContent,
+        };
+
+        const result = await transporter.sendMail(mailOptions);
+        console.log('Password reset email sent via regular SMTP:', result);
+
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+    }
+}
+
+
 module.exports = {
-    sendEmail
+    sendEmail,
+    sendPasswordResetEmail
 };

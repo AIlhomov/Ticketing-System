@@ -44,6 +44,8 @@ CREATE TABLE users (
     google_access_token VARCHAR(255),
     google_refresh_token VARCHAR(255),        
     email VARCHAR(255) UNIQUE,     
+    reset_password_token VARCHAR(255),
+    reset_password_expires BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     role ENUM('admin', 'user', 'agent') DEFAULT 'user'
 );
