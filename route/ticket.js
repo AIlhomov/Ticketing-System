@@ -126,9 +126,6 @@ router.get('/ticket/view/:id', async (req, res) => {
 
         const ticketClaim = await ticketService.getTicketClaim(ticketId); // Get the "claimed by" agent
 
-        console.log(ticketClaim);
-        console.log("TICKET:: ", ticket)
-
         res.render('ticket/pages/view_ticket', {
             user: req.user,
             ticket: ticket,
@@ -539,6 +536,39 @@ router.post('/reset-password/:token', async (req, res) => {
         console.error('Error resetting password:', error);
         res.status(500).send('Error resetting password.');
     }
+});
+
+
+
+// POST route for creating a new user
+router.post('/users/create', isAdmin, async (req, res) => {
+    try {
+        const { username, email, password, role } = req.body;  // Destructure the fields from the body
+
+        
+        const newUser = await userService.createUserByDefiningUser(username, email, password, role);  // Pass individual parameters
+        res.redirect('/users/success');
+    } catch (error) {
+        console.error('Error creating user:', error);
+
+        // Check if the error is due to a duplicate entry
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(400).render('ticket/pages/user_exists', {
+                message: 'User already exists. Please choose a different username or email.',
+                user: req.user
+
+            });
+        }
+
+        // Handle other errors
+        if (!res.headersSent) {
+            return res.status(500).json({ message: 'Error creating user', error });
+        }
+    }
+});
+
+router.get('/users/success', (req, res) => {
+    res.render('ticket/pages/user_success', { title: 'Success', user: req.user });
 });
 
 

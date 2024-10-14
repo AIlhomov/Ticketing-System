@@ -101,6 +101,31 @@ async function updatePassword(userId, newPassword) {
     });
 }
 
+async function createUserByDefiningUser(username, email, password, role) {
+    return new Promise((resolve, reject) => {
+        const saltRounds = 10;
+
+        if (!password) {
+            return reject(new Error('Password is required'));
+        }
+
+        bcrypt.hash(password, saltRounds, (err, hash) => {
+            if (err) {
+                return reject(err);
+            }
+
+            const query = 'INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)';
+            connection.query(query, [username, hash, email, role], (err, result) => {
+                if (err) {
+                    return reject(err);
+                } else {
+                    return resolve(result);
+                }
+            });
+        });
+    });
+}
+
 
 module.exports = {
     createUser,
@@ -109,5 +134,6 @@ module.exports = {
     findUserByEmail,
     findUserByResetToken,
     setResetPasswordToken,
-    updatePassword
+    updatePassword,
+    createUserByDefiningUser
 };
