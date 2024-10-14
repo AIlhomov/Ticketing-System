@@ -1,0 +1,31 @@
+<%- include('../partials/header', { title: 'Edit User' }); %>
+
+<div class="container">
+    <h1>Edit User</h1>
+
+    <form action="/users/edit/<%= userToEdit.id %>" method="POST">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" class="form-control" value="<%= userToEdit.username %>" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" value="<%= userToEdit.email %>" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <select id="role" name="role" class="form-control" required>
+                <option value="admin" <%= userToEdit.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                <option value="agent" <%= userToEdit.role === 'agent' ? 'selected' : '' %>>Agent</option>
+                <option value="user" <%= userToEdit.role === 'user' ? 'selected' : '' %>>User</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Update User</button>
+        <a href="/users/manage" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<%- include('../partials/footer'); %>

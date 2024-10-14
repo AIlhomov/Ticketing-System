@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 const ticketService = require('../src/ticket.js');
 const multer = require('multer');
-const userService = require('../src/userController.js');
+const userController = require('../src/userController.js');
+const userService = require('../src/services/userService.js');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -189,7 +190,7 @@ router.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        await userService.createUser(username, email, password);
+        await userService.createUser(username, email, "user", password); // When a new user registers they are assigned the role of "user"
         res.redirect('/login');
     } catch (error) {
         console.error('Error during registration:', error);
@@ -477,7 +478,7 @@ router.get('/forgot-password', (req, res) => {
 
 // Route for displaying the reset password form
 router.get('/reset-password/:token', async (req, res) => {
-    const user = await userService.findUserByResetToken(req.params.token);
+    const user = await userController.findUserByResetToken(req.params.token);
 
     if (!user || user.reset_password_expires < Date.now()) {
         req.flash('error', 'Password reset token is invalid or has expired.');
@@ -492,7 +493,7 @@ router.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
 
     try {
-        const user = await userService.findUserByEmail(email);
+        const user = await userController.findUserByEmail(email);
         if (!user) {
             req.flash('error', 'No account with that email address exists.');
             return res.redirect('/forgot-password');
@@ -501,7 +502,7 @@ router.post('/forgot-password', async (req, res) => {
         // Generate a reset token
         const token = crypto.randomBytes(20).toString('hex');
         
-        await userService.setResetPasswordToken(user.id, token);
+        await userController.setResetPasswordToken(user.id, token);
 
         await emailService.sendPasswordResetEmail(email, token);
 
@@ -520,7 +521,7 @@ router.post('/reset-password/:token', async (req, res) => {
     const token = req.params.token;
 
     try {
-        const user = await userService.findUserByResetToken(token);
+        const user = await userController.findUserByResetToken(token);
         if (!user || user.reset_password_expires < Date.now()) {
             req.flash('error', 'Password reset token is invalid or has expired.');
             return res.redirect('/forgot-password');
@@ -528,7 +529,7 @@ router.post('/reset-password/:token', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        await userService.updatePassword(user.id, hashedPassword);
+        await userController.updatePassword(user.id, hashedPassword);
 
         req.flash('message', 'Your password has been reset successfully. You can now log in.');
         res.redirect('/login');
@@ -540,36 +541,7 @@ router.post('/reset-password/:token', async (req, res) => {
 
 
 
-// POST route for creating a new user
-router.post('/users/create', isAdmin, async (req, res) => {
-    try {
-        const { username, email, password, role } = req.body;  // Destructure the fields from the body
 
-        
-        const newUser = await userService.createUserByDefiningUser(username, email, password, role);  // Pass individual parameters
-        res.redirect('/users/success');
-    } catch (error) {
-        console.error('Error creating user:', error);
-
-        // Check if the error is due to a duplicate entry
-        if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).render('ticket/pages/user_exists', {
-                message: 'User already exists. Please choose a different username or email.',
-                user: req.user
-
-            });
-        }
-
-        // Handle other errors
-        if (!res.headersSent) {
-            return res.status(500).json({ message: 'Error creating user', error });
-        }
-    }
-});
-
-router.get('/users/success', (req, res) => {
-    res.render('ticket/pages/user_success', { title: 'Success', user: req.user });
-});
 
 
 module.exports = router;
