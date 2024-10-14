@@ -113,13 +113,14 @@ router.post('/ticket/update-status/:id', async (req, res) => {
 });
 
 
-// View a single ticket's details
+// View a single ticket's details and handle comment submission
 router.get('/ticket/view/:id', async (req, res) => {
     const ticketId = req.params.id;
 
     try {
         const ticket = await ticketService.getTicketById(ticketId);
         const attachments = await ticketService.getAttachmentsByTicketId(ticketId);
+        const comments = await ticketService.getTicketComments(ticketId); // Get all comments
 
         if (!ticket) {
             return res.status(404).send('Ticket not found');
@@ -132,14 +133,15 @@ router.get('/ticket/view/:id', async (req, res) => {
             ticket: ticket,
             attachments: attachments,
             role: req.user.role,
-            ticketClaim: ticketClaim
+            ticketClaim: ticketClaim,
+            comments: comments // Add comments data
         });
+
     } catch (error) {
         console.error('Error retrieving ticket details:', error);
         return res.status(500).send('Error retrieving ticket details');
     }
 });
-
 // Route to close a ticket
 router.get('/ticket/close/:id', async (req, res) => {
     const ticketId = req.params.id;
@@ -541,7 +543,38 @@ router.post('/reset-password/:token', async (req, res) => {
 
 
 
+// Route to handle posting a comment
+router.post('/ticket/comment/:id', async (req, res) => {
+    const ticketId = req.params.id;
+    const { comment } = req.body;
 
+    try {
+        const ticket = await ticketService.getTicketById(ticketId);
+
+        if (!ticket) {
+            return res.status(404).send('Ticket not found');
+        }
+
+        // Check if the user is allowed to comment
+        if (req.user.role === 'user' && ticket.user_id !== req.user.id) {
+            req.flash('error', 'You can only comment on your own tickets.');
+            return res.redirect(`/ticket/view/${ticketId}`);
+        }
+
+        if (req.user.role === 'agent' && (!ticket.claimed_by || ticket.claimed_by !== req.user.id)) {
+            req.flash('error', 'You can only comment on tickets you have claimed.');
+            return res.redirect(`/ticket/view/${ticketId}`);
+        }
+
+        // Admins can always comment
+        await ticketService.addComment(ticketId, req.user.id, comment);
+
+        res.redirect(`/ticket/view/${ticketId}`);
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).send('Error adding comment');
+    }
+});
 
 
 module.exports = router;

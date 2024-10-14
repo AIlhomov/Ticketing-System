@@ -515,7 +515,37 @@ async function getTicketsByCategoryId(categoryId) {
     });
 }
 
+// Get all comments for a specific ticket
+async function getTicketComments(ticketId) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT comments.text, comments.created_at, users.username 
+            FROM comments 
+            JOIN users ON comments.user_id = users.id 
+            WHERE comments.ticket_id = ?
+            ORDER BY comments.created_at ASC
+        `;
+        connection.query(query, [ticketId], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+}
 
+// Add a comment to a ticket
+async function addComment(ticketId, userId, commentText) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO comments (ticket_id, user_id, text, created_at) VALUES (?, ?, ?, NOW())';
+        connection.query(query, [ticketId, userId, commentText], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+}
 
 module.exports = {
     createTicket,
@@ -545,5 +575,7 @@ module.exports = {
     getTicketById,
     updateTicket,
     getSortedTicketsByUser,
-    getTicketsByCategoryId
+    getTicketsByCategoryId,
+    getTicketComments,
+    addComment
 };

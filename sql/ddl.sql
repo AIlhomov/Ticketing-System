@@ -1,5 +1,6 @@
 use ticket;
 
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS knowledge_base;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS attachments;
@@ -58,6 +59,16 @@ CREATE TABLE knowledge_base (
     created_by INT NOT NULL,  -- Link to users table
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    user_id INT NOT NULL,
+    text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 
