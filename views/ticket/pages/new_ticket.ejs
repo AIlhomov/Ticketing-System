@@ -2,7 +2,7 @@
 <div class="container">
     <h1>Create a New Ticket</h1>
 
-    <form action="/ticket/new" method="POST" enctype="multipart/form-data">
+    <form id="ticketForm" action="/ticket/new" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">Title:</label>
             <input type="text" class="form-control" id="title" name="title" required>
@@ -14,7 +14,13 @@
         </div>
 
         <div class="form-group">
-            <label for="category">Category:</label>
+            <p>Suggested Category: <span id="suggestedCategory">N/A</span></p>
+        </div>
+
+        <input type="hidden" id="category_name" name="category_name" value="" />
+
+        <div class="form-group">
+            <label for="category_id">Category:</label>
             <select class="form-control" id="category_id" name="category_id" required>
                 <option value="" disabled selected>Select a category</option>
                 <% categories.forEach(category => { %>
@@ -22,7 +28,6 @@
                 <% }); %>
             </select>
         </div>
-        
 
         <div class="form-group">
             <label for="file">Attach Files (Allowed formats: JPG, PNG, GIF, PDF. Max size: 1MB per file, 5MB total):</label>
@@ -32,5 +37,99 @@
         <button type="submit" class="btn btn-primary">Submit Ticket</button>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        const suggestedCategorySpan = document.getElementById('suggestedCategory');
+        const categorySelect = document.getElementById('category_id');
+        const categoryNameInput = document.getElementById('category_name');
+        const ticketForm = document.getElementById('ticketForm');
+
+        async function getSuggestedCategory() {
+            const title = titleInput.value;
+            const description = descriptionInput.value;
+        
+            if (title.trim() === '' && description.trim() === '') {
+                suggestedCategorySpan.textContent = 'N/A';
+                return;
+            }
+        
+            const ticketText = `${title} ${description}`;
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+        
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: ticketText })
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    const predictedCategory = data.category;
+                    suggestedCategorySpan.textContent = predictedCategory;
+        
+                    // Check if the predicted category exists in the select options
+                    let categoryOption = Array.from(categorySelect.options).find(option => option.text === predictedCategory);
+        
+                    if (categoryOption) {
+                        categorySelect.value = categoryOption.value;
+                        categoryNameInput.value = '';
+                    } else {
+                        let newOption = document.createElement('option');
+                        newOption.value = 'new_category'; // Special value to indicate a new category
+                        newOption.text = predictedCategory;
+                        categorySelect.add(newOption);
+                        categorySelect.value = 'new_category';
+                        categoryNameInput.value = predictedCategory; // Set the hidden input with the new category name
+                    }
+                } else {
+                    console.error('Error fetching suggested category:', response.statusText);
+                    suggestedCategorySpan.textContent = 'Error';
+                }
+            } catch (error) {
+                console.error('Error fetching suggested category:', error);
+                suggestedCategorySpan.textContent = 'Error';
+            } finally {
+                submitButton.disabled = false;
+            }
+        }
+        
+
+        // Debounce function to limit API calls
+        function debounce(func, delay) {
+            let debounceTimer;
+            return function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => func.apply(this, arguments), delay);
+            };
+        }
+
+        // Call getSuggestedCategory when the user stops typing
+        const debouncedGetSuggestedCategory = debounce(getSuggestedCategory, 300);
+
+        titleInput.addEventListener('input', debouncedGetSuggestedCategory);
+        descriptionInput.addEventListener('input', debouncedGetSuggestedCategory);
+
+        ticketForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            // Check if category_id is 'new_category' and category_name is empty
+            if (categorySelect.value === 'new_category' && categoryNameInput.value.trim() === '') {
+                await getSuggestedCategory();
+            }
+            
+            
+
+            // After ensuring categoryNameInput is populated, submit the form
+            ticketForm.submit();
+        });
+    });
+</script>
 
 <%- include('../partials/footer'); %>

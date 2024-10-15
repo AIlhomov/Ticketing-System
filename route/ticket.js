@@ -10,6 +10,8 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const emailService = require('../src/emailService.js');
 const crypto = require('crypto');
+const axios = require('axios');
+
 const { isAdmin, isAgent, isUser, isAgentOrAdmin } = require('../middleware/role');
 
 router.get('/', (req, res) => {
@@ -48,39 +50,59 @@ router.get('/ticket/new', async (req, res) => {
 
 // Create a new ticket
 router.post('/ticket/new', (req, res) => {
-
     if (!req.user) {
         return res.status(401).send('Unauthorized: User not logged in');
     }
 
     ticketService.uploadFiles(req, res, async (err) => {
-        if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).send('Error: Each file must be less than 1MB.');
-        } else if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_COUNT') {
-            return res.status(400).send('Error: You can only upload up to 5 files.');
-        } else if (err) {
+        if (err) {
             return res.status(400).send('Error uploading files: ' + err.message);
         }
 
         try {
-            console.log('Uploaded Files:', req.files);
-            console.log('Form Data:', req.body);
-
             const userId = req.user ? req.user.id : null;
-            const { title, description, category_id, email } = req.body;
+            const { title, description, category_id, category_name } = req.body;
 
-            console.log('CATEGORRY:', category_id);
+            let finalCategoryId;
 
-            let userEmail;
-            if (req.user) {
-                userEmail = req.user.email;
+            // If category_id is 'new_category', automatically create the new category
+            if (category_id === 'new_category') {
+                if (!category_name) {
+                    return res.status(400).send('Error: Category name is required for new categories.');
+                }
+
+                // Check if the category already exists
+                let existingCategory = await ticketService.getCategoryByName(category_name);
+
+                if (existingCategory) {
+                    finalCategoryId = existingCategory.id;
+                } else {
+                    // Automatically create the new category
+                    let newCategory = await ticketService.createCategory(category_name);
+                    finalCategoryId = newCategory.id;
+                }
             } else {
-                userEmail = email;
-                if (!userEmail) {
-                    return res.status(400).send('Error: Email is required for anonymous ticket submissions.');
+                // Validate that category_id is a valid integer
+                finalCategoryId = parseInt(category_id, 10);
+                if (isNaN(finalCategoryId)) {
+                    return res.status(400).send('Error: Invalid category ID.');
+                }
+
+                const exists = await ticketService.categoryExists(finalCategoryId);
+                if (!exists) {
+                    return res.status(400).send('Error: Selected category does not exist.');
                 }
             }
-            const ticket = await ticketService.createTicket(title, description, category_id, userEmail, userId, req.files);
+
+            // Proceed to create the ticket with the final category ID
+            const ticket = await ticketService.createTicket(
+                title,
+                description,
+                finalCategoryId,
+                req.user.email,
+                userId,
+                req.files
+            );
 
             res.redirect('/ticket/success');
         } catch (error) {
@@ -94,6 +116,7 @@ router.post('/ticket/new', (req, res) => {
 
 
 
+// Route to update the status of a ticket
 router.post('/ticket/update-status/:id', async (req, res) => {
     const ticketId = req.params.id;
     const newStatus = req.body.status;
@@ -575,6 +598,9 @@ router.post('/ticket/comment/:id', async (req, res) => {
         res.status(500).send('Error adding comment');
     }
 });
+
+// --------------------------------------------------------------------------
+
 
 
 module.exports = router;

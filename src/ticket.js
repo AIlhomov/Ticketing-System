@@ -547,6 +547,34 @@ async function addComment(ticketId, userId, commentText) {
     });
 }
 
+async function getCategoryByName(categoryName) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT id, name FROM categories WHERE name = ?';
+        connection.query(query, [categoryName], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            if (results.length > 0) {
+                resolve(results[0]); // Return the category object
+            } else {
+                resolve(null); // Category not found
+            }
+        });
+    });
+}
+
+async function categoryExists(categoryId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT id FROM categories WHERE id = ?';
+        connection.query(query, [categoryId], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results.length > 0); // Returns true if exists, false otherwise
+        });
+    });
+}
+
 module.exports = {
     createTicket,
     getTickets,
@@ -577,5 +605,7 @@ module.exports = {
     getSortedTicketsByUser,
     getTicketsByCategoryId,
     getTicketComments,
-    addComment
+    addComment,
+    getCategoryByName,
+    categoryExists
 };
