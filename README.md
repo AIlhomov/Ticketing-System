@@ -33,7 +33,7 @@ cd Ticketing-System
 1. **Create a virtual environment** (optional but recommended for isolating dependencies):
    ```bash
    python -m venv env
-   source env/bin/activate   # For Windows use: env\Scripts ctivate
+   source env/bin/activate
    ```
 
 2. **Install the required Python libraries**:
