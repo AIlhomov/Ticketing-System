@@ -65,8 +65,24 @@ cd Ticketing-System
    DB_USER=root
    DB_PASSWORD=your_password
    DB_NAME=ticket
-   DB_PORT=3306
+
+   # Google OAuth2 for email
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   GOOGLE_REFRESH_TOKEN=your_google_refresh_token
+   AUTH_MAIL_ADDRESS=your_email@gmail.com
+
+   GOOGLE_REDIRECT_URI=http://localhost:1337/auth/google/callback
+   HOST=localhost:1337
+
+
    ```
+### Setting Up Email Integration with Google
+
+1. In your Google Cloud Console, set up OAuth2 credentials for your application.
+2. Get your `Client ID`, `Client Secret`, and `Refresh Token` following this guide: [Google OAuth2 for Email](https://developers.google.com/identity/protocols/oauth2).
+3. Copy the `.env.example` file and rename it to `.env`.
+4. Fill in your credentials in the `.env` file.
 
 ### Step 4: Running the Application
 
