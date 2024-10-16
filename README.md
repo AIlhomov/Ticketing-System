@@ -108,7 +108,7 @@ The application should now be running at:
 To automate starting both the Python and Node.js servers, use the `start_servers.sh` script:
 
 ```bash
-bash start_servers.sh
+.\start_servers.sh
 ```
 
 This script starts both the Python ML server and the Node.js server for you.
