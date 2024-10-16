@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Starting Python server..."
-gnome-terminal -- bash -c "python D:/Ticketing-System/scripts/app.py; exec bash"
+python ~/Ticketing-System/scripts/app.py &
 echo "Starting Node.js server..."
-cd D:/Ticketing-System
+cd ~/Ticketing-System
 npm run dev

@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
@@ -6,9 +7,12 @@ app = Flask(__name__)
 
 CORS(app, resources={r"/predict": {"origins": "*"}}, supports_credentials=True)
 
-# Load the trained model and vectorizer
-model = joblib.load('ticket_classifier_model.pkl')
-vectorizer = joblib.load('tfidf_vectorizer.pkl')
+# Set the path to the directory where your model and vectorizer are located
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+# Load the trained model and vectorizer using the correct path
+model = joblib.load(os.path.join(script_dir, 'ticket_classifier_model.pkl'))
+vectorizer = joblib.load(os.path.join(script_dir, 'tfidf_vectorizer.pkl'))
 
 @app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
