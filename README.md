@@ -1,7 +1,21 @@
 
 # Ticketing System Project
 
-This is a comprehensive ticketing system built using **Node.js**, **Express**, and **Python**. The system allows users to create, manage, and resolve tickets.
+## Introduction
+This project is a **Ticketing System** designed for creating, managing, and resolving tickets in an organization. It features machine learning-based category prediction and supports multiple user roles including **Admins**, **Agents**, and **Users**. The system is built using **Node.js**, **Express**, and **Python**, with email integration for ticket notifications.
+
+![Ticketing System Architecture](TODO: Add image here to illustrate project or architecture)
+
+## Architecture Overview (optional)
+The system uses a **client-server** architecture, with the backend managing ticket creation. Python is used for the machine learning model, while Node.js serves as the backend for handling requests and managing user roles. The architecture also includes MariaDB for database management and Google OAuth2 for email notifications.
+
+**Architecture Diagram:**
+- Node.js for API and routing.
+- Python (with scikit-learn) for category prediction.
+- MariaDB for storing tickets, users, and categories.
+- Google OAuth2 for email integration.
+
+![Architecture Diagram](TODO: Add simple architecture diagram here)
 
 ## Features
 - Users can create, update, and resolve tickets.
