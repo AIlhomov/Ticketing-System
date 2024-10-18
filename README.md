@@ -101,13 +101,18 @@ cd Ticketing-System
 
 
 ### Step 4: Resetting the Database
-You need to reset the database (dont worry there is a script that does it all for you)
-All you need to do is from the root directory of ticketing system just go into the folder scripts like this:
-```cd scripts```
-run the script:
-```node reset.js```
-This will reset your database to its default state and regenerate the CSV file.
+You need to reset the database (don't worry, there is a script that does it all for you). All you need to do is:
 
+1. From the root directory of the Ticketing System, navigate into the `scripts` folder:
+   ```bash
+   cd scripts
+   ```
+2. Run the reset script:
+   ```bash
+   node reset.js
+   ```
+
+This will reset your database to its default state and regenerate the CSV file.
 
 
 ### Step 5: Running the Application
