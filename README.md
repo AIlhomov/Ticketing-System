@@ -98,7 +98,19 @@ cd Ticketing-System
 3. Copy the `.env.example` file and rename it to `.env`.
 4. Fill in your credentials in the `.env` file.
 
-### Step 4: Running the Application
+
+
+### Step 4: Resetting the Database
+You need to reset the database (dont worry there is a script that does it all for you)
+All you need to do is from the root directory of ticketing system just go into the folder scripts like this:
+```cd scripts```
+run the script:
+```node reset.js```
+This will reset your database to its default state and regenerate the CSV file.
+
+
+
+### Step 5: Running the Application
 
 1. **Start the Python machine learning server** (run it from `scripts/app.py` in a separate terminal):
    ```bash
