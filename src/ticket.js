@@ -73,19 +73,19 @@ async function getSortedTickets(sort, order) { // Prob.
     });
 }
 
-// Ticket status
-async function updateTicketStatus(id, status) {
-    return new Promise((resolve, reject) => {
-        const query = 'UPDATE tickets SET status = ? WHERE id = ?';
-        connection.query(query, [status, id], (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
-        });
-    });
-}
+// // Ticket status
+// async function updateTicketStatus(id, status) {
+//     return new Promise((resolve, reject) => {
+//         const query = 'UPDATE tickets SET status = ? WHERE id = ?';
+//         connection.query(query, [status, id], (err, result) => {
+//             if (err) {
+//                 reject(err);
+//             } else {
+//                 resolve(result);
+//             }
+//         });
+//     });
+// }
 
 async function getTicketById(id) {
     return new Promise((resolve, reject) => {
@@ -307,11 +307,11 @@ async function updateTicketStatus(ticketId, status) {
                     } else {
                         const { user_id, email } = userResult[0];  // Get userId and userEmail
 
-                        // Email notification to the user
+                        // Email notification to the user with the ticket ID included
                         const emailSubject = `Your ticket status has been updated`;
                         const emailContent = `
                             <p>Dear User,</p>
-                            <p>The status of your ticket has been updated to: <strong>${status}</strong>.</p>
+                            <p>The status of your ticket with ID: <strong>${ticketId}</strong> has been updated to: <strong>${status}</strong>.</p>
                             <p>Thank you for using our support service.</p>
                             <p>Best regards,<br/>Ticketing Support Team</p>
                         `;
@@ -331,6 +331,7 @@ async function updateTicketStatus(ticketId, status) {
         });
     });
 }
+
 
 
 async function getUserEmailByTicketId(ticketId) {
@@ -579,7 +580,6 @@ module.exports = {
     createTicket,
     getTickets,
     getSortedTickets,
-    updateTicketStatus,
     getTicketById,
     uploadFiles,
     getAttachmentByTicketId,
