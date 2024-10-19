@@ -15,7 +15,7 @@
                         <% } %>
                     </p>
                 </div>
-                <p>Created on: <%= new Date(article.created_at).toString() %></p>
+                <p>Created on: <%= new Date(article.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></p>
                 <a href="/knowledge_base/articles/<%= article.id %>" class="btn btn-primary">READ MORE</a>
                 <hr>
             </li>
