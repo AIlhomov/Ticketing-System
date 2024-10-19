@@ -910,3 +910,39 @@ input[type="text"]:focus, textarea:focus {
     white-space: pre-wrap; /* Preserve formatting of new lines */
     overflow-wrap: break-word; /* Handle long words or strings */
 }
+
+
+.category-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.category-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Slight gap to create closeness */
+}
+
+.category-btn {
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.category-edit-btn {
+    background-color: #007bff; /* Blue color for the edit button */
+}
+
+.category-delete-btn {
+    background-color: #dc3545; /* Red color for the delete button */
+}
+
+.category-btn:hover {
+    opacity: 0.8; /* Slight hover effect */
+}
+

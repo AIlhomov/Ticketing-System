@@ -597,6 +597,21 @@ async function categoryExists(categoryId) {
     });
 }
 
+// Service function to update a category
+async function updateCategory(categoryId, newName) {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE categories SET name = ? WHERE id = ?';
+        connection.query(query, [newName, categoryId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+
 module.exports = {
     createTicket,
     getTickets,
@@ -628,5 +643,6 @@ module.exports = {
     getTicketComments,
     addComment,
     getCategoryByName,
-    categoryExists
+    categoryExists,
+    updateCategory
 };

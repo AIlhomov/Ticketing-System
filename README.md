@@ -134,6 +134,29 @@ The application should now be running at:
 
 1. Visit [http://localhost:1337/](http://localhost:1337/) to interact with the ticketing system.
 2. You can register as a user, log in as an admin or agent, and create tickets.
+
+### Predefined Accounts and Roles
+The system includes three predefined accounts with different roles for testing and demonstration purposes. Each role has specific access and permissions:
+
+- **Super Admin**:  
+  - Login Credentials:  
+    `username: admin`  
+    `password: admin`  
+  - **Role and Access**: The Super Admin has the highest level of access in the system and can perform all administrative tasks. This includes creating and managing users, agents, and categories, as well as having full control over tickets and settings.
+
+- **Agent**:  
+  - Login Credentials:  
+    `username: agent`  
+    `password: agent`  
+  - **Role and Access**: The Agent can claim, respond to, and resolve tickets. They can also update ticket statuses and assign categories but do not have permissions to manage other users or system-wide settings.
+
+- **User**:  
+  - Login Credentials:  
+    `username: user`  
+    `password: user`  
+  - **Role and Access**: The User has minimal access and can only create and view their own tickets. They can also attach files and track the status of their tickets but do not have administrative privileges.
+
+
 ### Development
 
 To automate starting both the Python and Node.js servers, use the `start_servers.sh` script:
@@ -143,3 +166,4 @@ To automate starting both the Python and Node.js servers, use the `start_servers
 ```
 
 This script starts both the Python ML server and the Node.js server for you.
+

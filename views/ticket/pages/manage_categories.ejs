@@ -17,8 +17,11 @@
     <ul class="category-list">
         <% categories.forEach(category => { %>
             <li class="category-list-item">
-                <span><%= category.name %></span>
-                <button class="category-delete-btn" data-category-id="<%= category.id %>" data-category-name="<%= category.name %>">DELETE</button>
+                <span class="category-name"><%= category.name %></span>
+                <div class="category-btn-group">
+                    <button class="category-btn category-edit-btn" data-category-id="<%= category.id %>" data-category-name="<%= category.name %>">EDIT</button>
+                    <button class="category-btn category-delete-btn" data-category-id="<%= category.id %>" data-category-name="<%= category.name %>">DELETE</button>
+                </div>
             </li>
         <% }); %>
     </ul>
@@ -46,7 +49,28 @@
     </div>
 </div>
 
+<!-- Modal for edit category -->
+<div class="category-modal" id="editModal">
+    <div class="category-modal-content">
+        <div class="category-modal-header">
+            <h5 class="category-modal-title">Edit Category</h5>
+            <span class="category-modal-close" onclick="closeEditModal()">&times;</span>
+        </div>
+        <div class="category-modal-body">
+            <form id="editCategoryForm" action="/categories/edit" method="POST">
+                <input type="hidden" name="categoryId" id="categoryIdToEdit">
+                <label for="categoryNameToEdit">Category Name:</label>
+                <input type="text" id="categoryNameToEdit" name="categoryName" required>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-modal-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
+    // Delete button functionality
     document.querySelectorAll('.category-delete-btn').forEach(button => {
         button.addEventListener('click', async function() {
             const categoryId = this.getAttribute('data-category-id');
@@ -70,8 +94,27 @@
         });
     });
 
+    // Close delete modal
     function closeModal() {
         document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // Edit button functionality
+    document.querySelectorAll('.category-edit-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const categoryId = this.getAttribute('data-category-id');
+            const categoryName = this.getAttribute('data-category-name');
+
+            document.getElementById('categoryIdToEdit').value = categoryId;
+            document.getElementById('categoryNameToEdit').value = categoryName;
+
+            document.getElementById('editModal').style.display = 'block';
+        });
+    });
+
+    // Close edit modal
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
     }
 </script>
 

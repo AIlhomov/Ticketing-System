@@ -434,6 +434,18 @@ router.post('/categories/create', isAgent, async (req, res) => {
     }
 });
 
+// Route to edit an existing category (for agents)
+router.post('/categories/edit', isAgent, async (req, res) => {
+    const { categoryId, categoryName } = req.body;
+    try {
+        await ticketService.updateCategory(categoryId, categoryName);
+        res.redirect('/categories/manage');
+    } catch (error) {
+        console.error('Error editing category:', error);
+        res.status(500).send('Error editing category');
+    }
+});
+
 // Fetch tickets associated with a category (for confirmation modal)
 router.get('/categories/tickets/:categoryId', isAgent, async (req, res) => {
     const categoryId = req.params.categoryId;
