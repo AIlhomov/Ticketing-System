@@ -457,13 +457,33 @@ async function getTicketById(ticketId) {
 
 async function updateTicket(ticketId, updatedData) {
     return new Promise((resolve, reject) => {
-        const { title, description, category } = updatedData;
+        // Dynamically build the SQL query based on provided fields
+        const fields = [];
+        const values = [];
+
+        if (updatedData.title !== undefined) {
+            fields.push('title = ?');
+            values.push(updatedData.title);
+        }
+        if (updatedData.description !== undefined) {
+            fields.push('description = ?');
+            values.push(updatedData.description);
+        }
+        if (updatedData.category !== undefined) {
+            fields.push('category_id = ?');
+            values.push(updatedData.category);
+        }
+
+        values.push(ticketId);
+
+        // Join the fields to construct the final query
         const query = `
             UPDATE tickets 
-            SET title = ?, description = ?, category_id = ? 
+            SET ${fields.join(', ')} 
             WHERE id = ?
         `;
-        connection.query(query, [title, description, category, ticketId], (err, result) => {
+
+        connection.query(query, values, (err, result) => {
             if (err) {
                 reject(err);
             } else {
@@ -472,6 +492,7 @@ async function updateTicket(ticketId, updatedData) {
         });
     });
 }
+
 
 async function getSortedTicketsByUser(userId, sort, order) {
     return new Promise((resolve, reject) => {

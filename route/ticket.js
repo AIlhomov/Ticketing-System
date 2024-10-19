@@ -483,9 +483,16 @@ router.get('/ticket/edit/:id', isAgentOrAdmin, async (req, res) => {
 router.post('/ticket/edit/:id', isAgentOrAdmin, async (req, res) => {
     const ticketId = req.params.id;
     const { title, description, category } = req.body;
+    const updateData = { category }; // Start with only category
+
+    // Allow updating title and description only if the user is an admin
+    if (req.user.role === 'admin') {
+        if (title) updateData.title = title;
+        if (description) updateData.description = description;
+    }
 
     try {
-        await ticketService.updateTicket(ticketId, { title, description, category });
+        await ticketService.updateTicket(ticketId, updateData);
         res.redirect('/ticket/list');
     } catch (error) {
         console.error('Error updating ticket:', error);
