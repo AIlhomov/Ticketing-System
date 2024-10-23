@@ -15,6 +15,12 @@ The system uses a **client-server** architecture, with the backend managing tick
 - MariaDB for storing tickets, users, and categories.
 - Google OAuth2 for email integration.
 
+The system includes a **RESTful API** for interacting with the backend and a **web interface** for users to create and manage tickets. The machine learning model predicts ticket categories based on the description provided by the user.
+
+The system supports multiple user roles, including **Admins** who can manage users, agents, and categories, **Agents** who can claim, respond to, and resolve tickets, and **Users** who can create and track their tickets.
+
+The image below shows the database schema for the ticketing system (ER diagram):
+
 ![Architecture Diagram](assets/images/ticket-db.png)
 
 ## Features
