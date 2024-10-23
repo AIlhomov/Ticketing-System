@@ -6,7 +6,7 @@ This project is a **Ticketing System** designed for creating, managing, and reso
 
 ![Ticketing System](assets/images/image.png)
 
-## Architecture Overview (optional)
+## Architecture Overview
 The system uses a **client-server** architecture, with the backend managing ticket creation. Python is used for the machine learning model, while Node.js serves as the backend for handling requests and managing user roles. The architecture also includes MariaDB for database management and Google OAuth2 for email notifications.
 
 **Architecture Diagram:**
@@ -80,12 +80,15 @@ cd Ticketing-System
    DB_PASSWORD=your_password
    DB_NAME=ticket
 
-   # Google OAuth2 for email
+   # Google OAuth2 for email (SSO integration) 
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+   # For sending email notifications (SMTP)
    AUTH_MAIL_ADDRESS=your_email@gmail.com
    AUTH_PASSWORD_MAIL=your_email_password
-
+   
+   # Port for the Node.js server (default is 1337) 
    GOOGLE_REDIRECT_URI=http://localhost:1337/auth/google/callback
    HOST=localhost:1337
 
@@ -93,9 +96,9 @@ cd Ticketing-System
    ```
 ### Setting Up Email Integration with Google
 
-1. In your Google Cloud Console, set up OAuth2 credentials for your application.
-2. Get your `Client ID`, `Client Secret`, and `Refresh Token` following this guide: [Google OAuth2 for Email](https://developers.google.com/identity/protocols/oauth2).
-3. Copy the `.env.example` file and rename it to `.env`.
+1. In your Google Cloud Console, set up OAuth2 credentials for your application. (https://console.cloud.google.com)
+2. Get your `Client ID` and `Client Secret` following this guide: [Google OAuth2 for Email](https://developers.google.com/identity/protocols/oauth2).
+3. Copy the `.env` file above (what it should look like) and create it in the root directory of the repository.
 4. Fill in your credentials in the `.env` file.
 
 
