@@ -4,7 +4,7 @@
 ## Introduction
 This project is a **Ticketing System** designed for creating, managing, and resolving tickets in an organization. It features machine learning-based category prediction and supports multiple user roles including **Admins**, **Agents**, and **Users**. The system is built using **Node.js**, **Express**, and **Python**, with email integration for ticket notifications.
 
-![Ticketing System Architecture](TODO: Add image here to illustrate project or architecture)
+![Ticketing System](assets/images/image.png)
 
 ## Architecture Overview (optional)
 The system uses a **client-server** architecture, with the backend managing ticket creation. Python is used for the machine learning model, while Node.js serves as the backend for handling requests and managing user roles. The architecture also includes MariaDB for database management and Google OAuth2 for email notifications.
@@ -15,7 +15,7 @@ The system uses a **client-server** architecture, with the backend managing tick
 - MariaDB for storing tickets, users, and categories.
 - Google OAuth2 for email integration.
 
-![Architecture Diagram](TODO: Add simple architecture diagram here)
+![Architecture Diagram](assets/images/ticket-db.png)
 
 ## Features
 - Users can create, update, and resolve tickets.
@@ -83,8 +83,8 @@ cd Ticketing-System
    # Google OAuth2 for email
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_google_client_secret
-   GOOGLE_REFRESH_TOKEN=your_google_refresh_token
    AUTH_MAIL_ADDRESS=your_email@gmail.com
+   AUTH_PASSWORD_MAIL=your_email_password
 
    GOOGLE_REDIRECT_URI=http://localhost:1337/auth/google/callback
    HOST=localhost:1337
