@@ -68,7 +68,7 @@ function resetDatabase() {
 
 function runPythonScript() {
     return new Promise((resolve, reject) => {
-        const pythonProcess = spawn('python', [pythonScriptPath]);
+        const pythonProcess = spawn('python3', [pythonScriptPath]);
 
         // Capture output from Python script
         pythonProcess.stdout.on('data', (data) => {
