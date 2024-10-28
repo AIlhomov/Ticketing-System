@@ -1,6 +1,8 @@
 
 # Ticketing System Project
 
+![Logo](assets/images/logo.png)
+
 ## Introduction
 This project is a **Ticketing System** designed for creating, managing, and resolving tickets in an organization. It features machine learning-based category prediction and supports multiple user roles including **Admins**, **Agents**, and **Users**. The system is built using **Node.js**, **Express**, and **Python**, with email integration for ticket notifications.
 
